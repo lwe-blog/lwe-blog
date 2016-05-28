@@ -29,9 +29,10 @@
 
   <header class="site-header">
     <nav>
-      <a class="brand" href="/">
-        <img src="/images/{{ site.info.logo }}" alt="Inc">
-      </a>
+      <!--<a class="brand" href="/">-->
+        <!--<img src="/images/{{ site.info.logo }}" alt="Inc">-->
+      <!--</a>-->
+        <div style="display: inline-block; width: 100px;"></div>
         {% for page in site.header_links %}
           {% if page.title %}
           <a href="{{ page.url }}">{{ page.title }}</a>

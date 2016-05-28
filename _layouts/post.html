@@ -21,7 +21,7 @@ layout: base
     <footer>
       <address>
         {% if page.author.image %}<img src="/images/{{ page.author.image }}">{% endif %}
-        <p>Written by <strong><a rel="author" href="https://twitter.com/{{ page.author.twitter }}" title="{{ page.author_name }}" target="_blank">{{ page.author.name }}</a></strong><br>
+        <p>Written by <strong><a rel="author" href="#" title="{{ page.author_name }}">{{ page.author.name }}</a></strong><br>
           <span class="muted">{{ page.author.bio }}</span>
         </p>
       </address>
@@ -29,7 +29,7 @@ layout: base
       {% assign post = page.next %}
       <section class="post_summary">
         <h3 class="title">Next: <a href="{{ post.url }}" rel="prefetch">{{ post.title }}</a></h3>
-        <p>{{ post.excerpt }}</p>
+        <!--<p>{{ post.excerpt }}</p>-->
         <hr>
       </section>
       {% endif %}

@@ -12,8 +12,8 @@
   <link rel="alternate" type="application/atom+xml" title="{{ site.info.title }}" href="/atom.xml" />
   <meta name="title" content="{% if page.title %}{{ page.title }} {% else %}{{ site.info.title }}{% endif %}">
   <link rel="canonical" href="{{ site.url }}{{ page.url }}">
-  {% if page.site.gplus %}<link rel="publisher" href="https://plus.google.com/{{ site.info.gplus }}">{% endif %} 
-  {% if page.author.gplus %}<link rel="author" href="https://plus.google.com/{{ page.author.gplus }}">{% endif %}       
+  {% if page.site.gplus %}<link rel="publisher" href="https://plus.google.com/{{ site.info.gplus }}">{% endif %}
+  {% if page.author.gplus %}<link rel="author" href="https://plus.google.com/{{ page.author.gplus }}">{% endif %}
   <meta property="og:title" content="{% if page.title %}{{ page.title }}{% else %}{{ site.info.title }}{% endif %}"/>
   <meta property="og:url" content="{{ site.url }}{{ page.url }}"/>
   {% if page.cover_image %}<meta property="og:image" content="{{ site.url }}/images/{{ page.cover_image }}"/>{% endif %}
@@ -21,35 +21,56 @@
   <meta property="og:description" content="{{ page.excerpt }}"/>
   <meta name="description" content="{{ page.excerpt }}"/>
   {% endif %}
-  <meta property="og:site_name" content="{{ site.info.title }}">     
+  <meta property="og:site_name" content="{{ site.info.title }}">
+  {% include mathjax.js %}
 </head>
 <body>
-    
+  {% include mathjax_macros.html %}
+
   <header class="site-header">
     <nav>
       <a class="brand" href="/">
         <img src="/images/{{ site.info.logo }}" alt="Inc">
       </a>
-      <a href="/">Blog</a>
-      <a href="/about.html">About</a>
+        {% for page in site.header_links %}
+          {% if page.title %}
+          <a href="{{ page.url }}">{{ page.title }}</a>
+          {% endif %}
+        {% endfor %}
     </nav>
   </header>
+
+<div class="blog-cover" style="background-image:url(/images/{{ site.info.cover_image }});">
+  <div class='cover_overlay'>
+    <div class="content">
+      <h1>{{ site.info.title }}</h1>
+      {% if site.info.subtitle %}<h3>{{ site.info.subtitle }}</h3>{% endif %}
+    </div>
+  </div>
+</div>
 
   {{ content }}
 
   <footer class="site-footer">
     <div class="container">
-      &copy; {{ site.time | date: "%Y" }} Will Koehler
-        
+      <!--&copy; {{ site.time | date: "%Y" }} Will Koehler-->
+      LWE {{ site.time | date: "%Y" }}
       <nav>
-        <a href="/">Blog</a> &middot;
-        <a href="/about.html">About</a>
+        {% for page in site.header_links %}
+          {% if page.title %}
+          &middot;
+          <a href="{{ page.url }}">{{ page.title }}</a>
+          {% endif %}
+        {% endfor %}
       </nav>
-        
+
       <nav class="social">
         {% include social_links.html %}
       </nav>
-      <div>Based on Incorporated theme by <a href="https://sendtoinc.com">Inc</a></div>
+      <div>Based on Incorporated theme by <a href="https://sendtoinc.com">Inc</a>
+      and
+      <a href="https://github.com/willkoehler/my_blog">Will Koehler</a>.
+  </div>
     </div>
   </footer>
 

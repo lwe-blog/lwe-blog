@@ -1,48 +1,61 @@
 info:
   # Blog Information
-  title:        "Will Koehler"
-  subtitle:     "Independent web developer living in Columbus, OH"
-  cover_image:  short-north-columbus-oh.jpg
-  cover_image_caption: "Short North, Columbus, OH. Photo: Pineapple XVI"
-  about_image:  goodale-park-columbus-oh.jpg
-  about_image_caption: "Goodale Park, Columbus, OH. Photo: Dave K."
+  title:        "Learning With Errors"
+  subtitle:     "theory student blog"
+  cover_image:  goodale-park-columbus-oh.jpg
+  cover_image_caption: "Goodale Park, Columbus, OH. Photo: Dave K."
   logo:         logo.png
-  
+  #description: ""
+
   # Social links
-  # facebook:     sendtoinc
-  twitter:      wckoehler
-  github:       willkoehler
-  # gplus:        '101183822199340201470'
-  
+  # facebook:
+  #twitter:
+  #github:
+  # gplus:
+
   # Comments
   disqus:
     # Eg. "exampleblog" Set to false to disable comments
-    shortname:  koehlerblog
-  
+    shortname:  learningwitherrors
+
   # Google Analytics tracking ID. Leave blank to disable tracking
-  google-analytics-id: 'UA-54124306-1'
-  
+  google-analytics-id:
+
   # Sharing settings
   sharing:
-    twitter:    true
-    facebook:   true
+    twitter:    false
+    facebook:   false
     gplus:      false
     hn:         false
-    reddit:     true
-    
+    reddit:     false
+
   # Google Fonts
   # eg. 'Droid+Sans:400,700|Droid+Serif:400,700'
   # google_font: 'Droid+Sans:400,700'
-  
+
   # Setup your fonts, colors etc at _assets/stylesheets/main.scss
 
 # Root URL where the site will be published
-url:         http://willkoehler.net
-
-# host 0.0.0.0 allows us to access site via sapphire.local or localhost or 127.0.0.1
-host: 0.0.0.0
+url:         http://learningwitherrors.org
 
 paginate:             10
+
+header_links:
+    - url: "/"
+      title: "Blog"
+    - url: "/about/"
+      title: "About"
+    - url: "/contributing/"
+      title: "Contributing"
+
+defaults:
+  -
+    scope:
+      path: "" # an empty string here means all files in the project
+      type: "posts" # previously `post` in Jekyll 2.2.
+    values:
+      permalink: /:year/:month/:day/:title.html
+      excerpt_separator: <!--more--> # doesn't work.... ??? TODO.
 
 # safe mode must be disabled to use jekyll-assets.
 safe:               false

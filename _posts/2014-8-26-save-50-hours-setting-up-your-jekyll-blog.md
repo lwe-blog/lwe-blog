@@ -4,8 +4,6 @@ last-modified: '2014-10-17T12:00:00-04:00'
 
 title: "Save 50 Hours Setting up Your Jekyll Blog"
 subtitle: "Spoiler: Just fork mine."
-cover_image: overbrook-ravine-in-clintonville.jpg
-cover_image_caption: "Overbrook ravine in Clintonville. Photo: Will Koehler"
 
 excerpt: "Being a perfectionist I knew that I wouldn't be able to resist tinkering with every detail of my
           new Jekyll blog. I spent 50 hours perfecting my blog, so you don't have to."

@@ -1,17 +1,11 @@
 info:
   # Blog Information
   title:        "Learning With Errors"
-  subtitle:     "theory student blog"
+  subtitle:     "a theory student blog"
   cover_image:  mountains_banff.JPG
   cover_image_caption: ""
   logo:         logo.png
-  #description: ""
-
-  # Social links
-  # facebook:
-  #twitter:
-  #github:
-  # gplus:
+  description: "a theory student blog"
 
   # Comments
   disqus:
@@ -20,19 +14,6 @@ info:
 
   # Google Analytics tracking ID. Leave blank to disable tracking
   google-analytics-id:
-
-  # Sharing settings
-  sharing:
-    twitter:    false
-    facebook:   false
-    gplus:      false
-    hn:         false
-    reddit:     false
-
-  # Google Fonts
-  # eg. 'Droid+Sans:400,700|Droid+Serif:400,700'
-  # google_font: 'Droid+Sans:400,700'
-
 
 # Root URL where the site will be published
 url:         http://learningwitherrors.org
@@ -59,3 +40,12 @@ defaults:
 
 sass:
     sass_dir: _sass
+
+markdown: kramdown
+kramdown:
+    math_engine: nil # this doesn't actually disable it... so instead,
+        # there is a javascript hack in _includes/footer_script.html that replaces
+        # all the script type math/tex tags with $$...$$, as it was before
+        # kramdown messed it up.
+
+

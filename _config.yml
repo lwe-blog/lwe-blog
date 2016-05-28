@@ -33,7 +33,6 @@ info:
   # eg. 'Droid+Sans:400,700|Droid+Serif:400,700'
   # google_font: 'Droid+Sans:400,700'
 
-  # Setup your fonts, colors etc at _assets/stylesheets/main.scss
 
 # Root URL where the site will be published
 url:         http://learningwitherrors.org
@@ -55,24 +54,8 @@ defaults:
       type: "posts" # previously `post` in Jekyll 2.2.
     values:
       permalink: /:year/:month/:day/:title.html
-      excerpt_separator: <!--more--> # doesn't work.... ??? TODO.
+      excerpt: ""
+      #excerpt_separator: <!--more--> # doesn't work.... ??? TODO.
 
-# safe mode must be disabled to use jekyll-assets.
-safe:               false
-
-#
-# jekyll-assets: see more at https://github.com/ixti/jekyll-assets
-#
-assets:
-  dirname: assets
-  baseurl: /assets/
-  sources:
-    - _assets/javascripts
-    - _assets/stylesheets
-    - _assets/images
-  js_compressor: uglifier
-  css_compressor: sass
-  cachebust: none
-  cache: false
-  gzip: [ text/css, application/javascript ]
-  debug: false
+sass:
+    sass_dir: _sass

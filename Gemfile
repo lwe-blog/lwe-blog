@@ -1,6 +1,2 @@
 source 'https://rubygems.org'
-
-gem 'jekyll'
-gem 'jekyll-assets'
-gem 'rake'
-gem 'uglifier'
+gem 'github-pages', group: :jekyll_plugins

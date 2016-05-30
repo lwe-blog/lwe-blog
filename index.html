@@ -6,13 +6,25 @@ layout: base
     {% for post in paginator.posts %}
     <section class="post_summary">
       <h2 class="title"><a href="{{ post.url }}" rel="prefetch">{{ post.title }}</a></h2>
-      <!--<p>{{ post.excerpt }}</p>-->
-      {{ post.content | strip_html | truncatewords: 100 }}
       <div class="meta">
         <address>{{ post.author.name }}</address> &mdash;
         <time pubdate datetime="{{ post.date | date: "%Y-%d-%B" }}" title="{{ post.date | date: "%b %d, %Y" }}">{{ post.date | date: "%b %d, %Y" }}</time> &mdash;
         {% include read_time_estimate.html content=post.content %}
       </div>
+      <p>
+      {{ post.excerpt }}
+    <br>
+      <a href="{{ post.url }}">Full post →</a>
+
+      {% if false %} <!-- apparently no sane way to comment things and prevent them from appearing in output? -->
+       <p>
+       {% if post.content contains '<!--more-->' %}
+         {{ post.content | split:'<!--more-->' | first }}
+       {% else %}
+         {{ post.content | truncatewords:100 }}
+       {% endif %}
+       </p>
+       {% endif %}
       <hr>
     </section>
     {% endfor %}

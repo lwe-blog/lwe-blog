@@ -3,8 +3,6 @@ layout: post
 
 title: "Fast Johnson-Lindenstrauss"
 
-excerpt_separator: <!--more-->
-
 author:
   name: Preetum Nakkiran
   bio: student
@@ -44,7 +42,9 @@ author:
       return false; // prevent default action of jumping to anchor
     }
 </script>
-<div style='display:none'>$$ \renewcommand\qedsymbol{$\blacksquare$}
+<div style="display: none;">
+<script type="math/tex">
+\renewcommand\qedsymbol{$\blacksquare$}
 \newcommand{\1}{\mathbbm{1}}
 \DeclareMathOperator*{\argmin}{argmin}
 \DeclareMathOperator*{\argmax}{argmax}
@@ -60,11 +60,12 @@ author:
 \newcommand{\bmqty}[1]{\begin{bmatrix}#1\end{bmatrix}}
 \newcommand{\innp}[1]{\langle #1 \rangle}
 \renewcommand{\t}{\widetilde}
- $$</div>
+</script>
+</div>
 <p>
 The Johnson-Lindenstrauss (JL) Transform says that, informally, we can embed high-dimensional points into a much lower dimension, while still preserving their pairwise distances. In this post we will start with the classical JL transform, then focus on the Fast JL Transform (FJLT) by Ailon and Chazelle [<a href='#ref-AC09'>AC09</a>], which achieves the JL embedding more efficiently (w.r.t. runtime and randomness). We will develop the FJLT from the perspective of &ldquo;preconditioning&rdquo; a sparse estimator, which comes with nice intuition from Fourier duality. We conclude by mentioning more recent developments in this area (faster/sparser/derandomizeder).
-<p>
 <!--more-->
+<p>
 <b>Motivation.</b> Aside from being an interesting structural result, the JL transform also has algorithmic and machine-learning applications. Eg, any application that only depends on approximate pairwise distances (such as nearest-neighbors), or even on pairwise inner-products<sup><a href='#footnote1' onclick="toggle_display_nojump('footnote1');">1</a></sup><span class='sidenote' id='footnote1'><a name='footnote1' href='#footnote1'>1.</a> Because, if the norms $||x_i-x_j||$, $||x_i||$, and $||x_j||$ are approximately preserved, then so is the inner-product $\innp{x_i,x_j}$.  </span> (such as kernel methods) may equivalently work with the dimensionality-reduced version of their input. This also has applications in sketching and scarification.
 <p>
 <h1 class='tex'>1. Classical JL </h1> The JL embedding theorem is:

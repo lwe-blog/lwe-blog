@@ -18,8 +18,8 @@
   <meta property="og:url" content="{{ site.url }}{{ page.url }}"/>
   {% if page.cover_image %}<meta property="og:image" content="{{ site.url }}/images/{{ page.cover_image }}"/>{% endif %}
   {% if page.excerpt %}
-  <meta property="og:description" content="{{ page.excerpt }}"/>
-  <meta name="description" content="{{ page.excerpt }}"/>
+  <meta property="og:description" content="{{ page.excerpt | strip_html | strip}}"/>
+  <meta name="description" content="{{ page.excerpt | strip_html | strip}}"/>
   {% endif %}
   <meta property="og:site_name" content="{{ site.info.title }}">
   {% include mathjax.js %}
@@ -54,7 +54,6 @@
 
   <footer class="site-footer">
     <div class="container">
-      <!--&copy; {{ site.time | date: "%Y" }} Will Koehler-->
       LWE {{ site.time | date: "%Y" }}
       <nav>
         {% for page in site.header_links %}
@@ -68,9 +67,9 @@
       <nav class="social">
         {% include social_links.html %}
       </nav>
-      <div>Based on Incorporated theme by <a href="https://sendtoinc.com">Inc</a>
-      and
-      <a href="https://github.com/willkoehler/my_blog">Will Koehler</a>.
+      <div>
+          Source on <a
+              href="https://github.com/lwe-blog/lwe-blog.github.io">GitHub</a>.
   </div>
     </div>
   </footer>

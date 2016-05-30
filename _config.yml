@@ -13,7 +13,7 @@ info:
     shortname:  learningwitherrors
 
   # Google Analytics tracking ID. Leave blank to disable tracking
-  google-analytics-id:
+  google-analytics-id: UA-78524899-1
 
 # Root URL where the site will be published
 url:         http://learningwitherrors.org
@@ -35,8 +35,8 @@ defaults:
       type: "posts" # previously `post` in Jekyll 2.2.
     values:
       permalink: /:year/:month/:day/:title.html
-      excerpt: ""
-      #excerpt_separator: <!--more--> # doesn't work.... ??? TODO.
+      #excerpt: ""
+      excerpt_separator: <!--more-->
 
 sass:
     sass_dir: _sass

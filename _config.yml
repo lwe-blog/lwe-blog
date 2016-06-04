@@ -48,4 +48,5 @@ kramdown:
         # all the script type math/tex tags with $$...$$, as it was before
         # kramdown messed it up.
 
-
+gems:
+      - jekyll-sitemap

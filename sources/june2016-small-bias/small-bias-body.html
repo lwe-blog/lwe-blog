@@ -73,7 +73,7 @@ Also, any random variable $X$ over $S$ can be considered as a vector $\t X \in \
 <p>
 <h2 class='tex'>2. Exact $k$-wise independence </h2> <a name="seckwise"></a> A distribution $D$ on $n$ bits is <em>$k$-wise independent</em> if any subset of $k$ bits are iid uniformly distributed. Equivalently, the distribution $D : \{\pm 1\}^n \to \R_{\geq 0}$ is $k$-wise independent iff the Fourier coefficients $\hat D(S) = 0$ for all $S \neq 0, |S| \leq k$.
 <p>
-$n$ such $k$-wise independent bits can be generated from a seed of length $O(k \log n)$ bits, using say Reed-Solomon codes. That is, the size of the sample space is $n^{O(k)}$. For $k$-wise independent bits, size is optimal, as the below claim shows (adapted from Umesh Vazirani's lecture notes [<a href='#ref-Vaz99'>Vaz99</a>]). 
+$n$ such $k$-wise independent bits can be generated from a seed of length $O(k \log n)$ bits, using say Reed-Solomon codes. That is, the size of the sample space is $n^{O(k)}$. This size is optimal, as the below claim shows (adapted from Umesh Vazirani's lecture notes [<a href='#ref-Vaz99'>Vaz99</a>]). 
 <blockquote><b>Claim 1</b> <em> <a name="claimkwise"></a> Let $D$ be a $k$-wise independent distribution on $\{\pm 1\}$ random variables $x_1, \dots, x_n$, over a sample space $S$. Then, $|S| = \Omega_k(n^{k / 2})$. </em></blockquote>
 
 <p>

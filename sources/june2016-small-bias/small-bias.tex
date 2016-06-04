@@ -1,0 +1,287 @@
+\documentclass[]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{fullpage}
+
+\usepackage{graphicx}
+\usepackage{amssymb,amsmath}
+\usepackage{amsthm}
+\usepackage{hyperref}
+
+\renewcommand\qedsymbol{$\blacksquare$}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{example}{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+
+% formatting
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\IfFileExists{microtype.sty}{\usepackage{microtype}}{}
+
+% compact main title.
+\usepackage{titling}
+\setlength{\droptitle}{-7em}
+\posttitle{\par\end{center}\vspace{-2em}}
+\postauthor{\end{tabular}\par\end{center}\vspace{-2.5em}}
+\postdate{\par\end{center}}
+
+% math macros
+\newcommand{\1}{\mathbb{1}}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\newcommand{\x}{\times}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+%\newcommand{\N}{\mathbb{N}}
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\E}{\mathop{\mathbb{E}}}
+\renewcommand{\bar}{\overline}
+\renewcommand{\epsilon}{\varepsilon}
+
+\newcommand{\bmqty}[1]{\begin{bmatrix}#1\end{bmatrix}}
+\newcommand{\innp}[1]{\langle #1 \rangle}
+\newcommand{\F}{\mathbb{F}}
+\renewcommand{\t}{\widetilde}
+\DeclareMathOperator{\rank}{rank}
+\newcommand{\note}[1]{&&\text{(#1)}}
+
+\title{Simple lower-bounds for small-bias spaces}
+\author{Preetum Nakkiran}
+\date{Jun 03, 2016}
+
+\begin{document}
+\maketitle
+
+I was reading about PRGs recently, and I think a lemma mentioned last time
+(used for Johnson-Lindenstrauss lower-bounds) can give simple lower-bounds for
+$\epsilon$-biased spaces.
+
+Notice:
+\begin{itemize}
+    \item $2^n$ mutually orthogonal vectors requires dimension at least $2^n$, but
+        $2^n$ ``almost orthogonal'' vectors with pairwise inner-products
+        $|\innp{v_i, v_j}| \leq \epsilon$ exists in dimension
+        $O(n/\epsilon^2)$, by Johnson-Lindenstrauss.
+    \item Sampling $n$ iid uniform bits requires a sample space of size
+        $2^n$, but $n$ $\epsilon$-biased bits can be sampled from a space of
+        size $O(n/\epsilon^2)$.
+\end{itemize}
+
+First, let's look at $k$-wise independent sample spaces, and see how the
+lower-bounds might be extended to the almost $k$-wise independent case.
+
+{\it Note: To skip the background, just see Lemma~\ref{lem:rank},
+and its application in Claim~\ref{claim:keps}.
+}
+
+\section{Preliminaries}
+What ``size of the sample space'' means is:
+For some sample space $S$, and $\pm 1$ random variables $X_i$,
+we will generate bits $x_1, \dots x_n$ as an instance of the r.vs $X_i$.
+That is, by drawing a sample $s \in S$, and setting $x_i = X_i(s)$.
+We would like to have $|S| \ll 2^n$, so we can sample from it using less than $n$ bits.
+
+Also, any random variable $X$ over $S$ can be considered as a vector
+$\t X \in \R^{|S|}$, with coordinates $\t X[s] := \sqrt{\Pr[s]} X(s)$.
+This is convenient because $\innp{\t X, \t Y} = \E[XY]$.
+
+
+\section{Exact $k$-wise independence}
+\label{sec:kwise}
+A distribution $D$ on $n$ bits is \emph{$k$-wise independent} if any subset of $k$ bits are iid
+uniformly distributed.
+Equivalently, the distribution $D : \{\pm 1\}^n \to \R_{\geq 0}$ is $k$-wise independent iff the Fourier coefficients
+$\hat D(S) = 0$ for all $S \neq 0, |S| \leq k$.
+
+$n$ such $k$-wise independent bits can be generated from a seed of length $O(k \log n)$ bits, using say Reed-Solomon codes.
+That is, the size of the sample space is $n^{O(k)}$.
+For $k$-wise independent bits, size is optimal, as the below claim shows
+(adapted from Umesh Vazirani's lecture notes~\cite{umesh_notes}).
+\begin{claim}
+    \label{claim:kwise}
+    Let $D$ be a $k$-wise independent distribution on $\{\pm 1\}$ random
+    variables $x_1, \dots, x_n$, over a sample space $S$.
+    Then, $|S| = \Omega_k(n^{k / 2})$.
+\end{claim}
+
+\begin{proof}
+    For subset $T \subseteq [n]$, let $\chi_T(x) = \prod_{i \in T} x_i$ be the
+    corresponding Fourier character.
+    Consider these characters as vectors in $\R^{|S|}$ as described above, with
+    $$\innp{\chi_A, \chi_B} = \E_{x \sim D}[\chi_A(x)\chi_B(x)] $$
+
+    Let $J$ be the family of all subsets of size $\leq k/2$.
+    Note that, for $A, B \in J$, the characters $\chi_A, \chi_B$ are orthogonal:
+    \begin{align*}
+     \innp{\chi_A, \chi_B}
+     &= \E_{x \sim D}[\chi_A(x)\chi_B(x)]\\
+     &= \E_{x \sim D}[(\prod_{i \in A \cap B} x_i^2)(\prod_{i \in A \Delta B}
+ x_i)]\\
+ &= \E_{x \sim D}[\chi_{A \Delta B}(x)] \note{since $x_i^2 = 1$}\\
+ &= 0 \note{since $|A \Delta B| \leq k$, and $D$ is $k$-wise independent}
+\end{align*}
+    Here $A \Delta B$ denotes symmetric difference, and the last equality
+    is because $\chi_{A \Delta B}$ depends on $\leq k$
+    variables, so the
+    expectation over $D$ is the same as over iid uniform bits.
+
+    Thus, the characters $\{\chi_A\}_{A \in J}$ form a set of
+    $|J|$ mutually-orthogonal vectors in $\R^{|S|}$.
+    So we must have $|S| \geq |J| = \Omega_k(n^{k/2})$.
+\end{proof}
+
+The key observation was relating independence of random
+variables to linear independence (orthogonality).
+Similarly, we could try to relate $\epsilon$-almost $k$-wise independent
+random variables to almost-orthogonal vectors.
+
+\section{Main Lemma}
+This result is Theorem 9.3 from Alon's paper~\cite{alon03}.
+The proof is very clean, and Section 9 can be read independently.
+\footnote{
+Theorem 9.3 is stated in terms of lower bounding the rank of a matrix $B \in
+\R^{N \x N}$ where $B_{i,i} = 1$ and $|B_{i, j}| \leq \epsilon$.
+The form stated here follows by defining $B_{i, j} := \innp{v_i, v_j}$.
+}
+
+\begin{lemma}
+    \label{lem:rank}
+    Let $\{v_i\}_{i \in [N]}$ be a collection of $N$ unit vectors in $\R^d$,
+    such that $|\innp{v_i, v_j}| \leq \epsilon$ for all $i \neq j$.
+    Then, for $\frac{1}{\sqrt{N}} \leq \epsilon \leq 1/2$,
+    $$d \geq \Omega\left(\frac{\log N}{\epsilon^2 \log(1/\epsilon)}\right)$$
+\end{lemma}
+
+This lower-bound on the dimension of ``almost-orthogonal'' vectors translates to a
+nearly-tight lower-bound on Johnson-Lindenstrauss embedding dimension, and will
+also help us below.
+
+\section{Small bias spaces}
+A distribution $D$ on $n$ bits
+is \emph{$\epsilon$-biased w.r.t linear tests}  (or just ``$\epsilon$-biased'')
+if all $\F_2$-linear tests are at most $\epsilon$-biased. That is,
+for $x \in \{\pm 1\}^n$, the following holds for all subsets $S \subseteq [n]$:
+$$\left|\E_{x \sim D}[\chi_S(x)]\right| = \left|\Pr_{x \sim D}[\chi_S(x) = 1] -
+\Pr_{x \sim D}[\chi_S(x) = -1]\right| \leq \epsilon$$
+Similarly, a distribution is \emph{$\epsilon$-biased w.r.t. linear tests of
+size $k$} (or ``$k$-wise $\epsilon$-biased) if the above holds for all subsets $S$ of size $\leq k$.
+
+There exists an $\epsilon$-biased space on $n$ bits of size $O(n / \epsilon^2)$:
+a set of $O(n / \epsilon^2)$ random $n$-bit strings
+will be $\epsilon$-biased w.h.p.
+Further, explicit constructions exist that are nearly optimal: the such first
+construction was in~\cite{NN}, and was nicely simplified by~\cite{alon92}
+(both papers are very readable).
+
+These can be used to sample $n$ bits that are $k$-wise $\epsilon$-biased,
+from a space of size almost $O(k \log(n)/\epsilon^2)$; much better than the
+size $\Omega(n^k)$ required for perfect $k$-wise independence.
+For example\footnote{
+    This can be done by composing an $(n, k')$ ECC with dual-distance $k$
+    and an $\epsilon$-biased distribution on $k' = k\log n$ bits.
+    Basically, use a linear construction for generating
+$n$ exactly $k$-wise independent bits from $k'$ iid uniform bits,
+but use an $\epsilon$-biased distribution on $k'$ bits as the seed instead.
+},
+see~\cite{alon92} or the lecture notes~\cite{umesh_notes}.
+
+\subsection{Lower Bounds}
+The best lower bound on size of an $\epsilon$-biased space on $n$ bits seems to
+be $\Omega(\frac{n}{\epsilon^2 \log(1/\epsilon)})$, which is almost tight.
+The proofs of this in the literature (to my knowledge) work by exploiting a nice connection to
+error-correcting codes:
+Say we have a sample space $S$ under the uniform measure.
+Consider the characters $\chi_T(x)$ as vectors $\t \chi_T \in \{\pm 1\}^{|S|}$
+defined by $\t \chi_T[s] = \chi_T(x(s))$, similar to what we did in Section~\ref{sec:kwise}.
+The set of $2^n$ vectors $\{\t \chi_T\}_{T \subseteq [n]}$
+defines the codewords of a linear code
+of length $|S|$ and dimension $n$.
+Further, the hamming-weight of each codeword (number of $-1$s in each codeword,
+in our context), is within $n(\frac{1}{2} \pm \epsilon)$,
+since each parity $\chi_T$ is at most $\epsilon$-biased.
+Thus this code has relative distance at least $\frac{1}{2} - \epsilon$,
+and we can use sphere-packing-type bounds from coding-theory to lower-bound the
+codeword length $|S|$ required to achieve such a distance.
+Apparently the ``McEliece-Rodemich-Rumsey-Welch bound'' works in this case;
+a more detailed discussion is in~\cite[Section 7]{alon92}.
+
+We can also recover this same lower bound using Lemma~\ref{lem:rank} in a
+straightforward way.
+
+\begin{claim}
+    \label{claim:epsbias}
+    Let $D$ be an $\epsilon$-biased distribution on $n$ bits
+    $x_1, \dots, x_n$, over a sample space $S$.
+    Then,
+$$|S| = \Omega\left(\frac{n}{\epsilon^2 \log(1/\epsilon)}\right)$$
+\end{claim}
+\begin{proof}
+Following the proof of Claim~\ref{claim:kwise},
+consider the Fourier characters $\chi_T(x)$
+as vectors $\t \chi_T \in \R^{|S|}$, with
+$\t \chi_T[s] = \sqrt{\Pr[s]} \chi_T(x(s))$.
+Then, for all distinct subsets $A, B \subseteq [n]$, we have
+$$\innp{\t \chi_A, \t \chi_B} = \E_{x \sim D}[\chi_A(x)\chi_B(x)] = \E_{x \sim D}[\chi_{A \Delta B}(x)]$$
+Since $D$ is $\epsilon$-biased,
+$\left|\E_{x \sim D}[\chi_{A \Delta B}(x)]\right| \leq \epsilon$
+for all $A \neq B$.
+Thus, applying Lemma~\ref{lem:rank} to the collection of $N = 2^n$ unit vectors
+$\{\t \chi_T\}_{T \subseteq [n]}$ gives the lower bound
+$|S| = \Omega\left(\frac{n}{\epsilon^2 \log(1/\epsilon)}\right)$.
+\end{proof}
+
+This also nicely generalizes the proof of Claim~\ref{claim:kwise}, to
+give an almost-tight lower bound on spaces that
+are $\epsilon$-biased w.r.t linear tests of size $k$.
+
+\begin{claim}
+    \label{claim:keps}
+    Let $D$ be a distribution on $n$ bits that is $\epsilon$-biased w.r.t.
+    linear tests of size $k$.
+    Then, the size of the sample space is
+    $$|S| = \Omega\left(\frac{k \log (n/k)}{\epsilon^2 \log(1/\epsilon)}\right)$$
+\end{claim}
+\begin{proof}
+    As before,
+consider the Fourier characters $\chi_T(x)$
+as vectors $\t \chi_T \in \R^{|S|}$, with
+$\t \chi_T[s] = \sqrt{\Pr[s]} \chi_T(x(s))$.
+Let $J$ be the family of all subsets $T \subseteq [n]$ of size $\leq k/2$.
+Then, for all distinct subsets $A, B \in J$, we have
+$$\left|\innp{\t \chi_A, \t \chi_B}\right| = \left|\E_{x \sim D}[\chi_{A \Delta B}(x)]\right| \leq
+\epsilon$$
+since $|A \Delta B| \leq k$, and $D$ is $\epsilon$-biased w.r.t such linear tests.
+Applying Lemma~\ref{lem:rank} to the collection of $|J|$ unit vectors $\{\t \chi_T\}_{T \in J}$
+gives
+    $|S| = \Omega(\frac{k \log (n/k)}{\epsilon^2 \log(1/\epsilon)})$.
+\end{proof}
+
+{\it Note: I couldn't find the lower bound given by Claim~\ref{claim:keps} in
+    the literature, so please let me know
+if you find a bug or reference.
+
+Also, these bounds do not directly imply nearly tight lower bounds for
+\emph{$\epsilon$-almost $k$-wise independent} distributions
+(that is, distributions s.t. their marginals on all sets of $k$ variables are
+$\epsilon$-close to the uniform distribution, in $\ell_{\infty}$ or $\ell_{1}$
+norm). Essentially because of the loss in moving between closeness in Fourier
+domain and closeness in distributions.
+\footnote{
+    Eg, $\epsilon$-biased $\implies$ $\epsilon$-close in $\ell_{\infty}$,
+    but $\epsilon$-close in $\ell_{\infty}$ can be up to $2^{k-1}\epsilon$-biased.
+    And $2^{-k/2}\epsilon$-biased $\implies$ $\epsilon$-close in $\ell_{1}$, but
+    not the other direction.
+    }
+}
+
+\bibliography{bib}{}
+\bibliographystyle{alphaurl}
+
+\end{document}

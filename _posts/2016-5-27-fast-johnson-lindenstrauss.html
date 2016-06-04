@@ -6,20 +6,28 @@ title: "Fast Johnson-Lindenstrauss"
 author:
   name: Preetum Nakkiran
   bio: student
-  image: dog.jpg
+  image: preetum.jpg
+
+tags:
+    - berkeley
 ---
+
+
 
 <style>
 .sidenote {
     top: auto;
     float: left;
+
     display: none;
     margin: 10px;
     padding: 3px;
+
     font-size: 1em;
     opacity: 0.5;
     padding-left: 15px;
     border-left: 3px solid #ccc;
+
 }
 
 .sidenote:hover {
@@ -42,10 +50,8 @@ author:
       return false; // prevent default action of jumping to anchor
     }
 </script>
-<div style="display: none;">
-<script type="math/tex">
-\renewcommand\qedsymbol{$\blacksquare$}
-\newcommand{\1}{\mathbbm{1}}
+<div style='display:none;'><script type='math/tex'> \renewcommand\qedsymbol{$\blacksquare$}
+\newcommand{\1}{\mathbb{1}}
 \DeclareMathOperator*{\argmin}{argmin}
 \DeclareMathOperator*{\argmax}{argmax}
 \newcommand{\x}{\times}
@@ -54,21 +60,19 @@ author:
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\N}{\mathcal{N}}
 \newcommand{\E}{\mathop{\mathbb{E}}}
-\newcommand{\f}{\frac}
 \renewcommand{\bar}{\overline}
 \renewcommand{\epsilon}{\varepsilon}
 \newcommand{\bmqty}[1]{\begin{bmatrix}#1\end{bmatrix}}
 \newcommand{\innp}[1]{\langle #1 \rangle}
 \renewcommand{\t}{\widetilde}
-</script>
-</div>
+ </script></div>
 <p>
-The Johnson-Lindenstrauss (JL) Transform says that, informally, we can embed high-dimensional points into a much lower dimension, while still preserving their pairwise distances. In this post we will start with the classical JL transform, then focus on the Fast JL Transform (FJLT) by Ailon and Chazelle [<a href='#ref-AC09'>AC09</a>], which achieves the JL embedding more efficiently (w.r.t. runtime and randomness). We will develop the FJLT from the perspective of &ldquo;preconditioning&rdquo; a sparse estimator, which comes with nice intuition from Fourier duality. We conclude by mentioning more recent developments in this area (faster/sparser/derandomizeder).
+The Johnson-Lindenstrauss (JL) Transform says that, informally, we can embed high-dimensional points into a much lower dimension, while still preserving their pairwise distances. In this post we'll start with the classical JL transform, then focus on the Fast JL Transform (FJLT) by Ailon and Chazelle [<a href='#ref-AC09'>AC09</a>], which achieves the JL embedding more efficiently (w.r.t. runtime and randomness). We'll look at the FJLT from the perspective of &ldquo;preconditioning&rdquo; a sparse estimator, which comes with nice intuition from Fourier duality. We conclude by mentioning more recent developments in this area (faster/sparser/derandomizeder).
 <!--more-->
 <p>
-<b>Motivation.</b> Aside from being an interesting structural result, the JL transform also has algorithmic and machine-learning applications. Eg, any application that only depends on approximate pairwise distances (such as nearest-neighbors), or even on pairwise inner-products<sup><a href='#footnote1' onclick="toggle_display_nojump('footnote1');">1</a></sup><span class='sidenote' id='footnote1'><a name='footnote1' href='#footnote1'>1.</a> Because, if the norms $||x_i-x_j||$, $||x_i||$, and $||x_j||$ are approximately preserved, then so is the inner-product $\innp{x_i,x_j}$.  </span> (such as kernel methods) may equivalently work with the dimensionality-reduced version of their input. This also has applications in sketching and scarification.
+<b>Motivation.</b> It's an interesting structural result, and the JL transform also has algorithmic and machine-learning applications. Eg, any application that only depends on approximate pairwise distances (such as nearest-neighbors), or even on pairwise inner-products<sup><a href='#footnote1' onclick="toggle_display_nojump('footnote1');">1</a></sup><span class='sidenote' id='footnote1'><a name='footnote1' href='#footnote1'>1.</a> Because, if the norms $||x_i-x_j||$, $||x_i||$, and $||x_j||$ are approximately preserved, then so is the inner-product $\innp{x_i,x_j}$.  </span> (such as kernel methods) may equivalently work with the dimensionality-reduced version of their input. This also has applications in sketching and scarification.
 <p>
-<h1 class='tex'>1. Classical JL </h1> The JL embedding theorem is:
+<h2 class='tex'>1. Classical JL </h2> The JL embedding theorem is:
 <p>
 
 <blockquote><b>Theorem 1</b> <em> Given points $x_1, \dots, x_n \in \R^d$, and $\epsilon &gt; 0$, there exists an embedding $f: \R^d \to \R^k$ such that \[\forall i, j: \quad (1-\epsilon) ||x_i - x_j||_2 \leq ||f(x_i) - f(x_j)||_2 \leq (1+\epsilon) ||x_i - x_j||_2 \] and $k = O(\epsilon^{-2}\log n)$. </em></blockquote>
@@ -104,9 +108,9 @@ To recap, the key observation was that if we draw $g \sim N(0, I_d)$, then $\inn
 <p>
 We can now think of different JL transforms as constructing different estimators of $||x||^2$. For example, can we draw from a distribution such that $g$ is sparse? (Not quite, but with some &ldquo;preconditioning&rdquo; this will work, as we see below).
 <p>
-<h1 class='tex'>2. Fast JL </h1>
+<h2 class='tex'>2. Fast JL </h2>
 <p>
-<h2 class='tex'>2.1. First Try: Coordinate Sampling</h2> As a (bad) first try, consider the estimator that randomly samples a coordinate of the given vector $x$, scaled appropriately. That is, \[Y := \sqrt{d} ~x_j \quad\text{for uniformly random coordinate $j \in [d]$}\] Equivalently, draw a random standard basis vector $e_j$, and let $Y := \sqrt{d} \innp{e_j, x}$.
+<h3 class='tex'>2.1. First Try: Coordinate Sampling</h3> As a (bad) first try, consider the estimator that randomly samples a coordinate of the given vector $x$, scaled appropriately. That is, \[Y := \sqrt{d} ~x_j \quad\text{for uniformly random coordinate $j \in [d]$}\] Equivalently, draw a random standard basis vector $e_j$, and let $Y := \sqrt{d} \innp{e_j, x}$.
 <p>
 Notice that $Y^2$ has the right expectation: \[\E[Y^2] = \E_j[(\sqrt{d} x_j)^2] = d \E_j[x_j^2] = ||x||^2\] However, it does not concentrate well. The variance is $Var[Y^2] = Var[d x_j^2] = d^2 Var[x_j]$. If $x$ is a standard basis vector (say $x = e_1$), then this could be as bad as $Var[Y^2] \approx d$. This is bad, because it means we would need to average $\Omega(d)$ iid samples to get a sufficiently good estimator, which does not help us in reducing the dimension of $x \in \R^d$.
 <p>
@@ -123,7 +127,7 @@ Thus, if we can (quickly) &ldquo;precondition&rdquo; our vector $x$ to have $||x
 
  <em>Proof:</em>  \[||Sx||^2 = \sum_{i=1}^t \innp{\sqrt{\frac{d}{t}} e_{j_i}, x}^2 = \frac{1}{t}\sum_{i=1}^t d (x_{j_i})^2\] Then, the r.vs $\{d (x_{j_i})\}$ are iid and absolutely bounded by $O(\sqrt{\log(d/\delta)})$, so by Chernoff-Hoeffding and our choice of $t$, \[\Pr[ |\frac{1}{t}\sum_{i=1}^t d (x_{j_i})^2 - 1| &gt; \epsilon] \leq e^{-\Omega(\epsilon^2 t / \log(d/\delta))} \leq \delta\] $$\tag*{$\blacksquare$}$$
 <p>
-<h2 class='tex'>2.2. FJLT: Preconditioning with random Hadamard</h2> The main idea of FJLT is that we can quickly precondition vectors to be &ldquo;smooth&rdquo;, by using the Fast Hadamard Transform.
+<h3 class='tex'>2.2. FJLT: Preconditioning with random Hadamard</h3> The main idea of FJLT is that we can quickly precondition vectors to be &ldquo;smooth&rdquo;, by using the Fast Hadamard Transform.
 <p>
 Recall the $d \x d$ Hadamard transform $H_d$ (for $d$ a power of 2) is defined recursively as \[H_1 := 1 ,\quad H_{2d} := \frac{1}{\sqrt{2}} \bmqty{H_d & H_d\\H_d & -H_d}\] More explicitly, $H_d[i,j] = \frac{1}{\sqrt{d}} (-1)^{\innp{i, j}}$ where indices $i,j \in \{0, 1\}^{\log d}$, and the inner-product is mod 2. The Hadamard transform is just like the discrete Fourier transform<sup><a href='#footnote4' onclick="toggle_display_nojump('footnote4');">4</a></sup><span class='sidenote' id='footnote4'><a name='footnote4' href='#footnote4'>4.</a> Indeed, it is exactly the Fourier transform over the group $(\Z_2)^n$. For more on Fourier transforms over abelian groups, see for example <a href="https://lucatrevisan.wordpress.com/2016/03/16/cs294-lecture-15-abelian-cayley-graphs/">Luca's notes</a>. </span> : it can be computed in time $O(d\log d)$ by recursion, and it is an orthonormal transform.
 <p>
@@ -144,7 +148,7 @@ The above intuition seems messy to formalize but the proof is surprisingly simpl
 <p>
 <em>Proof:</em> } Consider the first entry of $H_d D x$. Let $D = diag(a_1, a_2, \dots, a_d)$ where $a_i$ are iid $\pm 1$. The first row of $H_d$ is $\frac{1}{\sqrt{d}} \bmqty{1 & 1 & \dots & 1}$, so \[(H_d D x)[1] = \frac{1}{\sqrt{d}} \sum_i a_ix_i\] Here, the $x_i$ are fixed s.t. $||x||_2=1$, and the $a_i = \pm 1$ iid. Thus we can again bound this by Hoeffding <sup><a href='#footnote6' onclick="toggle_display_nojump('footnote6');">6</a></sup><span class='sidenote' id='footnote6'><a name='footnote6' href='#footnote6'>6.</a>  The following form of Hoeffding bound is useful (it follows directly from Hoeffding for subgaussian variables, but is also a corollary of Azuma-Hoeffding): For iid zero-mean random variables $Z_i$, absolutely bounded by $1$, $\Pr[|\sum c_i Z_i| &gt; \epsilon] \leq 2exp(-\frac{\epsilon^2}{2 \sum_i c_i^2})$.  </span> (surprise), \[ \Pr[ | \sum_{i=1}^d a_i \frac{x_i}{\sqrt{d}}| &gt; \eta] \leq e^{-\Omega(\eta^2 d / ||x||_2^2)} \] For $\eta = \Omega(\sqrt{\frac{\log(d/\delta)}{d}})$, this probability is bounded by $(\frac{\delta}{d})$. Moreover, the same bound applies for all coordinates of $H_d Dx$, since all rows of $H_d$ have the form $\frac{1}{\sqrt{d}} \bmqty{\pm 1 & \pm1 & \dots & \pm1}$. Thus, union bound over $d$ coordinates establishes the lemma. $$\tag*{$\blacksquare$}$$
 <p>
-<h2 class='tex'>2.3. The Full Fast JL Transform</h2> <i>This presentation of FJLT is due to Jelani Nelson; see the notes [<a href='#ref-Nel10'>Nel10</a>].</i>
+<h3 class='tex'>2.3. The Full Fast JL Transform</h3> <i>This presentation of FJLT is due to Jelani Nelson; see the notes [<a href='#ref-Nel10'>Nel10</a>].</i>
 <p>
 Putting all the pieces together, the FJLT is defined as: \[A = J S H_d D\] or, \[ A: \quad \R^d \overset{D}{\longrightarrow} \R^d \overset{H_d}{\longrightarrow} \R^d \overset{S}{\longrightarrow} \R^t \overset{J}{\longrightarrow} \R^k \] where
 
@@ -164,7 +168,7 @@ That is, we first precondition with the randomized Hadamard transform, then samp
 <p>
 <b>Runtime.</b> For computing a JL embedding (ie, setting $\delta = 1/n^3, \epsilon=O(1)$), the time to embed a single vector is $O(d \log d + \log^3 n)$.
 <p>
-<h1 class='tex'>3. Closing Remarks </h1>
+<h2 class='tex'>3. Closing Remarks </h2>
 <p>
 <b>Optimality.</b> The target dimension given by the JL construction is known to be optimal. That is, one cannot embed $n$ points into dimension less than $k=\Omega(\epsilon^{-2}\log n)$ with distortion $\epsilon$. The first near-optimal lower-bound, in [<a href='#ref-Alo03'>Alo03</a>, Section 9] works by showing upper-bounds on the number of nearly-orthogonal vectors in a given dimension (so a too-good embedding of orthogonal vectors would violate this bound). A more recent, optimal bound, is in [<a href='#ref-KMN11'>KMN11</a>, Section 6]. They actually show optimality of the JL Lemma (that is, restricting to linear embeddings), which works (roughly) by arguing that if the target dimension is too small, then the kernel is too big, so a random vector is likely to be very distorted.
 <p>
@@ -180,14 +184,14 @@ That is, we first precondition with the randomized Hadamard transform, then samp
   neighbors.
  <em>SIAM Journal on Computing</em>, 39(1):302--322, 2009.
  URL:
-  <a href="https://www.cs.princeton.edu/ chazelle/pubs/FJLT-sicomp09.pdf">https://www.cs.princeton.edu/ chazelle/pubs/FJLT-sicomp09.pdf</a>.
+  <a href="https://www.cs.princeton.edu/~chazelle/pubs/FJLT-sicomp09.pdf">https://www.cs.princeton.edu/~chazelle/pubs/FJLT-sicomp09.pdf</a>.
 <p>
 
 <p>
 <a name='ref-Alo03'>[Alo03]</a>&emsp;Noga Alon.
  Problems and results in extremal combinatorics, part i.
  <em>Discrete Math</em>, 273:31--53, 2003.
- URL: <a href="http://www.tau.ac.il/ nogaa/PDFS/extremal1.pdf">http://www.tau.ac.il/ nogaa/PDFS/extremal1.pdf</a>.
+ URL: <a href="http://www.tau.ac.il/~nogaa/PDFS/extremal1.pdf">http://www.tau.ac.il/~nogaa/PDFS/extremal1.pdf</a>.
 <p>
 
 <p>
@@ -196,11 +200,11 @@ That is, we first precondition with the randomized Hadamard transform, then samp
  In <em>Approximation, Randomization, and Combinatorial Optimization.
   Algorithms and Techniques</em>, pages 628--639. Springer, 2011.
  URL:
-  <a href="http://people.seas.harvard.edu/ minilek/papers/derand_jl.pdf">http://people.seas.harvard.edu/ minilek/papers/derand_jl.pdf</a>.
+  <a href="http://people.seas.harvard.edu/~minilek/papers/derand_jl.pdf">http://people.seas.harvard.edu/~minilek/papers/derand_jl.pdf</a>.
 <p>
 
 <p>
-<a name='ref-KN14'>[KN14]</a>&emsp;Daniel M Kane and Jelani Nelson.
+<a name='ref-KN14'>[KN14]</a>&emsp;Daniel~M Kane and Jelani Nelson.
  Sparser johnson-lindenstrauss transforms.
  <em>Journal of the ACM (JACM)</em>, 61(1):4, 2014.
  URL: <a href="https://arxiv.org/pdf/1012.1577v6.pdf">https://arxiv.org/pdf/1012.1577v6.pdf</a>.

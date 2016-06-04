@@ -34,7 +34,7 @@ defaults:
       path: "" # an empty string here means all files in the project
       type: "posts" # previously `post` in Jekyll 2.2.
     values:
-      permalink: /:year/:month/:day/:title.html
+      permalink: /:year/:month/:day/:title/
       #excerpt: ""
       excerpt_separator: <!--more-->
 

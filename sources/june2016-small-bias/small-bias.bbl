@@ -1,0 +1,29 @@
+\begin{thebibliography}{AGHP92}
+
+\bibitem[AGHP92]{alon92}
+Noga Alon, Oded Goldreich, Johan H{\aa}stad, and Ren{\'e} Peralta.
+\newblock Simple constructions of almost k-wise independent random variables.
+\newblock {\em Random Structures \& Algorithms}, 3(3):289--304, 1992.
+\newblock URL: \url{http://www.tau.ac.il/~nogaa/PDFS/aghp4.pdf}.
+
+\bibitem[Alo03]{alon03}
+Noga Alon.
+\newblock Problems and results in extremal combinatorics, part i.
+\newblock {\em Discrete Math}, 273:31--53, 2003.
+\newblock URL: \url{http://www.tau.ac.il/~nogaa/PDFS/extremal1.pdf}.
+
+\bibitem[NN93]{NN}
+Joseph Naor and Moni Naor.
+\newblock Small-bias probability spaces: Efficient constructions and
+  applications.
+\newblock {\em SIAM journal on computing}, 22(4):838--856, 1993.
+\newblock URL: \url{http://www.wisdom.weizmann.ac.il/~naor/PAPERS/bias.pdf}.
+
+\bibitem[Vaz99]{umesh_notes}
+Umesh Vazirani.
+\newblock k-wise independence and epsilon-biased k-wise indepedence.
+\newblock 1999.
+\newblock URL:
+  \url{https://people.eecs.berkeley.edu/~vazirani/s99cs294/notes/lec4.pdf}.
+
+\end{thebibliography}

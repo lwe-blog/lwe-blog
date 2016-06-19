@@ -1,0 +1,4 @@
+<!--This expects the variable 'authorid' to be set, and generates a html link-->
+{% capture author_link %}/authors/{{ authorid }}{% endcapture %}
+{% assign author_name = site.data.authors[authorid].name %}
+<a href="{{ author_link }}">{{ author_name }}</a>

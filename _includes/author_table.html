@@ -1,0 +1,26 @@
+<style>
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+tr {
+    border-bottom: 1px solid gray;
+    border-top: 1px solid gray;
+}
+td {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+</style>
+
+<table class="authtable">
+{% for p in site.posts do %}
+  {% if p.authorid == authorid %}
+  <tr>
+      <td><a href="{{ p.url }}">{{ p.title }}</a></li></td>
+      <td>{{ p.date | date: '%B %d, %Y'}}</td>
+      <!--<td>{{ p.date | date_to_string }}</td>-->
+  </tr>
+  {% endif %}
+{% endfor %}
+</table>

@@ -27,6 +27,10 @@ header_links:
       title: "About"
     - url: "/contributing/"
       title: "Contributing"
+    - url: "/authors/"
+      title: "Authors"
+    - url: "/atom.xml"
+      title: "RSS"
 
 defaults:
   -

@@ -1,0 +1,32 @@
+---
+layout: page
+permalink: "/authors/"
+title: Authors
+---
+
+<style>
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+tr {
+    border-bottom: 1px solid gray;
+    border-top: 1px solid gray;
+}
+td {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+</style>
+
+{% for author_kvp in site.data.authors %}
+  {% assign authorid = author_kvp[0] %}
+  {% assign author = author_kvp[1] %}
+
+  <br/>
+  <br/>
+  <br/>
+  <h3>Posts by {% include gen_author_link.html %}</h3>
+  <p>
+  {% include author_table.html %}
+{% endfor %}

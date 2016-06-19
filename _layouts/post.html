@@ -1,6 +1,8 @@
 ---
 layout: base
 ---
+{% assign author = site.data.authors[page.authorid] %}
+{% assign authorid = page.authorid %}
 <article {% if page.container_class %}class='{{ page.container_class }}'{% endif %}>
 
   <div class="container">
@@ -8,7 +10,10 @@ layout: base
       <h1 class="title">{{ page.title }}</h1>
       {% if page.subtitle %}<h2 class="subtitle">{{ page.subtitle }}</h2>{% endif %}
       <div class="meta">
-        By <address><a rel="author" href="{{ page.author.link }}" title="{{ page.author.name }}" target="_blank">{{ page.author.name }}</a></address> &mdash;
+        By
+        <address>
+            {% include gen_author_link.html %}
+        </address> &mdash;
         <time pubdate datetime="{{ page.date | date: "%Y-%d-%B" }}" title="{{ page.date | date: "%b %d, %Y" }}">{{ page.date | date: "%b %d, %Y" }}</time> &mdash;
         {% include read_time_estimate.html content=content %}
       </div>
@@ -20,9 +25,12 @@ layout: base
 
     <footer>
       <address>
-        {% if page.author.image %}<img src="/images/{{ page.author.image }}">{% endif %}
-        <p>Written by <strong><a rel="author" href="#" title="{{ page.author_name }}">{{ page.author.name }}</a></strong><br>
-          <span class="muted">{{ page.author.bio }}</span>
+        {% if author.image %}<img src="/images/{{ page.author.image }}">{% endif %}
+        {% if author.gravatar %}
+        <img src="http://www.gravatar.com/avatar/{{ author.gravatar }}">
+        {% endif %}
+        <p>Written by <strong><a rel="author" href="#" title="{{ author.name }}">{{ author.name }}</a></strong><br>
+          <span class="muted">{{ author.bio }}</span>
         </p>
       </address>
       {% if page.next.url %}

@@ -1,0 +1,16 @@
+---
+layout: base
+---
+<article>
+  <div class="container">
+    <section>
+      {{ content }}
+
+      <p>
+    {% assign authorid = page.authorid %}
+    {% include author_table.html %}
+    </section>
+
+  </div>
+</article>
+

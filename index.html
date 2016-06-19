@@ -4,10 +4,14 @@ layout: base
 <article>
   <div class="container">
     {% for post in paginator.posts %}
+    {% assign author = site.data.authors[post.authorid] %}
+    {% assign authorid = post.authorid %}
     <section class="post_summary">
       <h2 class="title"><a href="{{ post.url }}" rel="prefetch">{{ post.title }}</a></h2>
       <div class="meta">
-        <address>{{ post.author.name }}</address> &mdash;
+        <address>
+            By {% include gen_author_link.html %}
+        </address> &mdash;
         <time pubdate datetime="{{ post.date | date: "%Y-%d-%B" }}" title="{{ post.date | date: "%b %d, %Y" }}">{{ post.date | date: "%b %d, %Y" }}</time> &mdash;
         {% include read_time_estimate.html content=post.content %}
       </div>

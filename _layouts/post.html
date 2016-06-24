@@ -29,7 +29,9 @@ layout: base
         {% if author.gravatar %}
         <img src="http://www.gravatar.com/avatar/{{ author.gravatar }}">
         {% endif %}
-        <p>Written by <strong><a rel="author" href="#" title="{{ author.name }}">{{ author.name }}</a></strong><br>
+        <p>Written by <strong>
+            {% include gen_author_link.html %}
+        </strong><br>
           <span class="muted">{{ author.bio }}</span>
         </p>
       </address>

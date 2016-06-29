@@ -4,6 +4,7 @@ title: "Intro to the Sum-of-Squares Hierarchy"
 authorid: tselil
 ---
 
+
 <style>
 .sidenote {
     top: auto;
@@ -93,7 +94,9 @@ One nice consequence of these constraints is that, if we evaluate the square of 
 
 
 <p>
-\medskip We now formalize the above definition.
+<br>
+
+We now formalize the above definition.
 <blockquote><b>Definition 1 (Sum-of-Squares Relaxation for $Q$ at degree $2d$)</b> <em> Given a polynomial optimization problem $Q$ with $\deg(p)\le 2d$ and $\deg(g_i) \le 2d\ \forall i \in [m]$, we define the <em>degree-$2d$ sum-of-squares relaxation</em> for $Q$, $\sos_{d}(Q)$.
 <p>
 We define a variable $X_{S}$ for each unordered multiset $S \subset [n]$ of size $|S| \le 2d$, and define the $(n+1)^d \times (n+1)^d$ matrix $X$, with rows and columns indexed by ordered multisets $U,V \subset [n]$, so that the $U,V$th entry of $X$ contains the variable $X_{U\cup V}$. Define the operator $\tilde{E}:\text{monomials}_{\le 2d}\to \R$ such that $\tilde{E}[\prod_{i\in S} x_i] = X_S$ for $|S| \le 2d$. Then, \[ \sos_d(Q) = \left\{ \max \ \tilde{E}[p(x)] \quad s.t.\quad \begin{aligned} &X \succeq 0,\\ &X_{\emptyset} = 1,\\ &\tilde{E}[ g_i(X)\cdot\prod_{i\in U} x_i] = 0\quad \forall i \in [m], U \subset [n], \deg(g_i) + |U| \le 2d \end{aligned} \right\} \] </em></blockquote>
@@ -116,9 +119,10 @@ This geometric intuition is extremely crisp, but unfortunately it is hard to com
 <p>
 <b>Pseudomoments.</b> As a start, one perspective is to think of the variables $X_S$ as the &ldquo;moments&rdquo; of a fake distribution over solutions to the program $Q$.
 <p>
-If we were to actually solve the (non-convex) problem $Q$ (using some inefficient algorithm), what we would have is either a single solution $y^*\in \R^n$, or a distribution over some set of solutions $Y\subset \R^n$, which maximize $p$, so that \[ OPT(Q) = \E_{y \in Y} [p(y)]. \] We cannot expect that the solution to the relaxation $\sos_d(Q)$ comes from an <em>actual</em> distribution over feasible solutions, but our constraints ensure that it still satisfies some of the properties of actual distributions<sup><a href='#footnote2' onclick="toggle_display_nojump('footnote2');">2</a></sup><span class='sidenote' id='footnote2'><a name='footnote2' href='#footnote2'>2.</a>  Because of our constraints on $\sos_d(Q)$, the pseudoexpectation $\tilde{E}$ satisfies linearity of expectation, \[ \tilde{E}[q(x)^2] \ge 0 \quad \text{if} \quad \deg(q)\le d, \] and also the non-negativity of low-degree squares, \[ \tilde{\E}[\alpha\cdot q_1(x) + \beta \cdot q_2(x)] = \alpha \cdot \tilde{\E}[q_1(x)] + \beta \cdot \tilde{\E}[q_2(x)]\quad \text{if} \quad \deg(q_1),\deg(q_2) \le 2d. \]
+If we were to actually solve the (non-convex) problem $Q$ (using some inefficient algorithm), what we would have is either a single solution $y^*\in \R^n$, or a distribution over some set of solutions $Y\subset \R^n$, which maximize $p$, so that \[ OPT(Q) = \E_{y \in Y} [p(y)]. \] We cannot expect that the solution to the relaxation $\sos_d(Q)$ comes from an <em>actual</em> distribution over feasible solutions, but our constraints ensure that it still satisfies some of the properties of actual distributions.<sup><a href='#footnote2' onclick="toggle_display_nojump('footnote2');">2</a></sup><span class='sidenote' id='footnote2'><a name='footnote2' href='#footnote2'>2.</a>  Because of our constraints on $\sos_d(Q)$, the pseudoexpectation $\tilde{E}$ satisfies linearity of expectation, \[ \tilde{E}[q(x)^2] \ge 0 \quad \text{if} \quad \deg(q)\le d, \] and also the non-negativity of low-degree squares, \[ \tilde{\E}[\alpha\cdot q_1(x) + \beta \cdot q_2(x)] = \alpha \cdot \tilde{\E}[q_1(x)] + \beta \cdot \tilde{\E}[q_2(x)]\quad \text{if} \quad \deg(q_1),\deg(q_2) \le 2d. \]
 <p>
- </span>--for this reason we can also call the solution to $\sos_d(Q)$ a <em>pseudodistribution</em>, and that is why we use the notation \[ \tilde{\E}\left[\prod_{i\in S} x_i \right] = X_S. \] In other words, we interpret the variable $X_S$ as being the <em>pseudomoment</em> of the monomial $\prod_{i\in S} x_i$ under a <em>pseudodistribution</em> over solutions to $Q$.
+ </span>
+ For this reason we can also call the solution to $\sos_d(Q)$ a <em>pseudodistribution</em>, and that is why we use the notation \[ \tilde{\E}\left[\prod_{i\in S} x_i \right] = X_S. \] In other words, we interpret the variable $X_S$ as being the <em>pseudomoment</em> of the monomial $\prod_{i\in S} x_i$ under a <em>pseudodistribution</em> over solutions to $Q$.
 <p>
 Thinking about the SDP solution in this way can be helpful in designing algorithms (and in proving lower bounds), but I will not discuss this perspective further here (maybe in a future post).
 <p>
@@ -170,7 +174,7 @@ Without loss of generality, we may apply a random rotation $R \in \R^{d\times d}
 We introduce the following polynomial optimization problem $Q_{sparse}$ for the planted sparse vector problem: \[ Q_{sparse}(A) = \left\{ \max_{x \in R^d} \| Ax \|^4_4 \qquad s.t. \qquad \|x\|^2_2 = 1 \right\} \] In other words, we want to find the linear combination of the columns of $A$ that will maximize the $4$-norm of $A$, while having $2$-norm roughly $1$. This program picks out sparse vectors over balanced vectors: a unit vector $e_i$ with only one nonzero entry has $\|e_i\|^2_2 = \|e_i\|^4_4 = 1$, while a unit vector $v$ with all $n$ entries of the same magnitude has $\|v\|_4^4 = n \cdot (1/\sqrt{n})^4 = 1/n \ll \|v\|_2^2$.
 <p>
 We prove the following theorem:
-<blockquote><b>Theorem 3</b> <em><a name="thmplsp"></a> If $1/k \ge \tilde{O}(\sqrt{d^3/n^3} + 1/n)$, then $\sos_4(Q_{sparse}(A))$ solves the planted $k$-sparse vector in a random subspace problem. </em></blockquote>
+<blockquote><b>Theorem 3</b> <em>(Barak-Brandao-Harrow-Kelner-Steurer-Zhao '12) <a name="thmplsp"></a> If $1/k \ge \tilde{O}(\sqrt{d^3/n^3} + 1/n)$, then $\sos_4(Q_{sparse}(A))$ solves the planted $k$-sparse vector in a random subspace problem. </em></blockquote>
 
 <p>
 
@@ -197,6 +201,12 @@ For the other term, we will use an even simpler bound. Let $c_{\alpha,\beta} = \
 <p>
 Putting the two arguments together, we have a sum-of-squares proof that \[ \|Ax\|_4^4 \le \left(\|B_{\neq}\| + c^*\right)\cdot \left(\sum_{\alpha} x_{\alpha}^2\right) \] Because we have the SDP constraint that $\|x\|_2^2 = 1$, the objective value is thus bounded by \[ \tilde{E}[\|Ax\|_4^4] = (\|B_{\neq} \|+ c^*) \cdot V\left[\left(\sum_{\alpha\in [d]}x_{\alpha}^2\right)^2\right] = \|B_{\neq}\| + c^*. \] The final step in the proof consists of showing that with high probability over the choice of $A$, \[ \|B_{\neq}\| \le \tilde{O}(\sqrt{d^3/n^3})\quad \text{and}\quad c^* \le \tilde{O}(1/n). \] The first fact we can prove using a matrix Chernoff bound, and the second fact we can prove using a Chernoff bound and a union bound. This concludes the proof! $$\tag*{$\blacksquare$}$$
 <p>
+
+To get the theorem with the better parameters mentioned above, Barak et al.
+remove the even-multiplicity indeces more carefully: they project away from the subspace containing the vectors which correlate too much with the even-multiplicity entries (whereas we just zeroed them out).
+This more careful treatment lets them prove a better matrix concentration result.
+<p>
+
 <h2 class='tex'>4. Other Resources </h2> Check out the following other resources for historical details and more sum-of-squares algorithms/lower bounds:
 
 <ul> <li> For notes about SDPs and duality, I like these notes by Lap Chi Lau:

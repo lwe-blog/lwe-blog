@@ -5,8 +5,8 @@ authorid: preetum
 ---
 
 We're starting a theory student blog!  The idea is, this is a collaborative blog
-about theoretical computer science, where students can post about interesting
-things we're learning / have learnt. The goal is to help everyone learn from
+about theoretical computer science, where people can post about interesting
+things they're learning / have learnt. The goal is to help everyone learn from
 each other, and also have a forum for student discussion.
 
 Hopefully this will help make TCS concepts more accessible: Sometimes reading
@@ -22,7 +22,7 @@ things nicely. And we want to encourage asking clarifying questions and
 discussing in the comments.
 
 ## On posts:
-- Posts can be about anything technical that other theory students may find
+- Posts can be about anything technical that other students may find
   interesting or learn from. Anything from current research to classical
   results.
 

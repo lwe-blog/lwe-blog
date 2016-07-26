@@ -15,6 +15,8 @@ of its Laplacian. This post will formally define spectral sparsification, then
 present the intuition behind the deterministic construction of spectral
 sparsifiers by Baston, Spielman and Srivastava [[BSS08](#BSS08)].
 
+<!--more-->
+
 Bencz&uacute;r and Karger [[BK96](#BK96)] introduced the cut sparsifier, which
 ensures that the value of all cuts in $H$ approximates that of all cuts in $G$:
 

@@ -43,7 +43,10 @@ with the quadratic form of the Laplacian:
 >
 > Where $L_G$ and $L_H$ are the graph Laplacians of $G$ and $H$ respectively.
 
-<!-- Add uses of sparsifiers -->
+Cut sparsifiers can be used in approximating max-flow (via the max-flow min-cut
+theorem) and spectral sparsifiers are a key ingredient in solving Laplacian
+inear systems in near linear time.
+
 <!-- Add why it's important for H to be weighted? -->
 
 Note that this stronger than cut sparsification, as we can fix $x$ to be the
@@ -255,9 +258,27 @@ therefore there exists a $i$ for which there is a gap between
 $L_A(v_i) - U_A(v_i)$. Choosing the constants carefully, we can get the required
 bound on the condition number.
 
-## Extensions
+## Extension
 
-TODO
+There is a similarity between [Theorem 2](#thm:rank1approx) and the
+Kadison-Singer conjecture. One formulation of it is stated below:
+
+> <a name="prop:KSC"></a>**Proposition 1:** There are universal constants
+> $\epsilon, \delta > 0$ and $r \in \mathbb N$ for which the following statement
+> holds. If $v_1, \cdots, v_m \in \mathbb{R}^n$ satisfy $||v_i|| \le \delta$ for
+> all $i$ and
+> $$
+> \sum_{i \le m} v_i v_i^T = I
+> $$
+> then there is a partition $X_1, \cdots X_r$ of $\{1, \cdots, m \}$ for which
+> $$
+> \left| \left| \sum_{i \in X_j} v_i v_i^T \right| \right| \le 1 - \epsilon
+> $$
+> for every $j = 1, \cdots, r$.
+
+This conjecture was positively resolved in \cite{MSS13}, using techniques
+arising from generalizing the barrier function argument used to prove
+[Theorem 2](#thm:rank1approx) to a multivariate version.
 
 ## References
 
@@ -268,6 +289,11 @@ $\tilde{O}(n^2)$ time. In *STOC '96*, pages 47-55, 1996.
 <a name="BSS08">[BSS08]</a>
 J. Baston, D. A. Spielman and N. Srivastava. Twice-Ramanujan
 Sparsifiers. Available at <http://arxiv.org/abs/0808.0163>, 2008.
+
+<a name="MSS13">[MSS13]</a>
+A. W. Marcus, D. A. Spielman and N. Srivastava. Interlacing Families
+II: Mixed Characteristic Polynomials and The Kadison-Singer Problem. Available
+at <http://arxiv.org/abs/1306.3969>, 2013.
 
 <a name="SS08">[SS08]</a>
 D. A. Spielman and N. Srivastava. Graph Sparsification by Effective

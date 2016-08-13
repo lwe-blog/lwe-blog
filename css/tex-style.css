@@ -1,0 +1,30 @@
+sup {
+    font-weight: bold;
+}
+
+.sidenote {
+    top: auto;
+
+    display: none;
+    margin: 10px;
+    padding: 3px;
+
+    font-size: 1em;
+    opacity: 0.5;
+    padding-left: 15px;
+    border-left: 3px solid #ccc;
+
+}
+
+.sidenote:hover {
+    opacity: 1.0;
+}
+
+.titleblock {
+    text-align: center;
+}
+
+.framed {
+    border: 1px solid black;
+    padding: 10px;
+}

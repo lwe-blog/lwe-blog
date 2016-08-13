@@ -1,0 +1,16 @@
+\newcommand{\etalchar}[1]{$^{#1}$}
+\begin{thebibliography}{BHK{\etalchar{+}}16}
+
+\bibitem[AKS98]{AKS98}
+Noga Alon, Michael Krivelevich, and Benny Sudakov.
+\newblock Finding a large hidden clique in a random graph.
+\newblock {\em Random Struct. Algorithms}, 13(3-4):457--466, 1998.
+
+\bibitem[BHKKMP16]{BHKKMP16}
+Boaz Barak, Samuel~B. Hopkins, Jonathan~A. Kelner, Pravesh Kothari, Ankur
+  Moitra, and Aaron Potechin.
+\newblock A nearly tight sum-of-squares lower bound for the planted clique
+  problem.
+\newblock {\em CoRR}, abs/1604.03084, 2016.
+
+\end{thebibliography}

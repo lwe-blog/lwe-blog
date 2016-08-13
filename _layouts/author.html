@@ -1,13 +1,20 @@
 ---
 layout: base
 ---
+{% assign author = site.data.authors[page.authorid] %}
+{% assign authorid = page.authorid %}
 <article>
   <div class="container">
     <section>
+        <!--{% if author.image %}<img src="/images/{{ page.author.image }}">{% endif %}-->
+        <!--{% if author.gravatar %}-->
+        <!--<img src="http://www.gravatar.com/avatar/{{ author.gravatar }}">-->
+        <!--{% endif %}-->
+
+        <h1>{{ author.name }}</h1>
       {{ content }}
 
       <p>
-    {% assign authorid = page.authorid %}
   <h3>Posts by {% include gen_author_link.html %}</h3>
     {% include author_table.html %}
     </section>

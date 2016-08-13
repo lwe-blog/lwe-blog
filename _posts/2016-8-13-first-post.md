@@ -43,7 +43,7 @@ non-students, and generally anyone interested in TCS.
 The easiest way is to
 simply write a LaTeX or Markup document, and email it to me (preetum [at]
 berkeley).
-There is also a harder way.
+There is also a [harder way](/contributing/).
 
 Ideally, both readers and writers would get something out of this blog.
 (Personally, I like to present topics to make sure I understand them

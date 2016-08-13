@@ -45,11 +45,8 @@
 \newcommand{\Mod}[1]{\ (\text{mod}\ #1)}
 \newcommand{\DYES}{\mathcal{D}_{YES}}
 \newcommand{\DNO}{\mathcal{D}_{NO}}
-\newcommand{\YES}{{\sc YES}~}
-\newcommand{\NO}{{\sc NO}~}
 \newcommand{\beq}{\begin{equation}}
 \newcommand{\eeq}{\end{equation}}
-\newcommand{\TODO}[1]{{\color{xxxcolor}{[TODO: }\emph{#1}{]}}}
 \newcommand{\claim}[1][\!\!]{{\bf Claim #1: }}
 \newcommand{\result}{{\bf Result. }}
 \newcommand{\qed}{\mbox{}\hspace*{\fill}\nolinebreak$\square$}
@@ -100,7 +97,8 @@ When the constraints are satisfied, $x_i$ is simply a boolean indicator variable
 <p>
 Again, when $G \sim \cG(n, 1/2, k)$, $\sos_d(\cli_k(G))$ remains feasible. If we want to tell which distribution $G$ is drawn from by looking only at whether $\sos_d(\cli_k(G))$ is feasible, we need that, when $G \sim \cG(n, 1/2)$, $\sos_d(\cli_k(G))$ is infeasible with probability at least $\varepsilon$. The main result of [<a href='#ref-BHKKMP16'>BHKKMP16</a>] is that this is impossible. In particular, they show the following:
 <p>
-\nbegin{theorem}[\cite{BHKKMP16}] <a name="thmmain-clique"></a> For every $d \ll \log n$, when $k \leq n^{1/2 - O(\sqrt{d/\log n})}$ and $G$ is drawn from $\cG(n, 1/2)$, $\sos_d(\cli_k(G))$ is feasible with high probability. </em></blockquote>
+
+<blockquote><b>Theorem 2</b> <em> <a name="thmmain-clique"></a> For every $d \ll \log n$, when $k \leq n^{1/2 - O(\sqrt{d/\log n})}$ and $G$ is drawn from $\cG(n, 1/2)$, $\sos_d(\cli_k(G))$ is feasible with high probability. </em></blockquote>
 
 <p>
 
@@ -108,7 +106,7 @@ Again, when $G \sim \cG(n, 1/2, k)$, $\sos_d(\cli_k(G))$ remains feasible. If we
 <p>
 In other words, Barak et al.'s result says that the SoS approach to planted clique is no better (up to the $O(\sqrt{d/\log n})$ factor in the exponent) than the known algorithm from [<a href='#ref-AKS98'>AKS98</a>].
 <p>
-From how $\sos_d(\cli_k(G))$ is defined, proving Theorem <a href="#thmmain-clique">1</a> boils down to find a linear operator ${\tE}_G: \{q: \deg(q) \leq 2d\} \rightarrow \mathbb{R}$ for each graph $G$ such that, if $G = ([n], E)$ is drawn from $\cG(n, 1/2)$, the following conditions are satisfied with high probability: 
+From how $\sos_d(\cli_k(G))$ is defined, proving Theorem <a href="#thmmain-clique">2</a> boils down to find a linear operator ${\tE}_G: \{q: \deg(q) \leq 2d\} \rightarrow \mathbb{R}$ for each graph $G$ such that, if $G = ([n], E)$ is drawn from $\cG(n, 1/2)$, the following conditions are satisfied with high probability: 
 
 <ol> <li> $\tE_G[1] = 1$, <li> $\forall i \in [n] \forall q$ with $ \deg(q) \leq 2d - 2, \tE_G[x_i^2q] = \tE_G[x_iq]$, <li> $\forall (i, j) \notin E \forall q$ with $\deg(q) \leq 2d - 2,\tE_G[x_ix_jq] = 0$, <li> $\tE_G[\sum_{i \in [n]} x_i] = k$, <li> $\forall q$ with $\deg(q) \leq d, \tE_G[q^2] \geq 0$. 
 </ol>

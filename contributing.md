@@ -17,7 +17,7 @@ The entire source code of this blog is public on
 [Github](https://github.com/lwe-blog/lwe-blog.github.io), so in theory you can
 also author a new post by compiling and pushing the appropriate files in the
 appropriate places. In practice it's rather messy, but details are
-[here](https://github.com/lwe-blog/lwe-blog.github.io).
+[here](https://github.com/lwe-blog/lwe-blog.github.io/blob/master/README.md).
 
 We use a LateX to HTML compiler which should work on anything that's not too fancy.
 (details of what works is below, but almost everything in math mode should

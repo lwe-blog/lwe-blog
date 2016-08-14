@@ -34,10 +34,10 @@ YYYY-MM-DD-name-of-post.html
 
 3. Add a header block like this:
 
-    `---`
-    layout: post
-    title: "Title of Post"
-    authorid: preetum
+    `---`    
+    layout: post    
+    title: "Title of Post"    
+    authorid: preetum    
     `---`
 
 4. Add the line "<!--more-->" roughly after the "abstract" of your post (the

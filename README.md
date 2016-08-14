@@ -29,17 +29,18 @@ website.
 1. If using LaTeX, compile to HTML using
 [LaTeX3HTML](https://github.com/lwe-blog/latex3html) **with --bodyonly option**.
 
-2. Put the generated html in a new file under \_posts/, with filename
+2. Put the generated html in a new file under <./_posts>, with filename
 YYYY-MM-DD-name-of-post.html
 
 3. Add a header block like this:
+
     ---
     layout: post
     title: "Title of Post"
     authorid: preetum
     ---
 
-4. Add a tag <!--more--> roughly after the "abstract" of your post (the
+4. Add the line "<!--more-->" roughly after the "abstract" of your post (the
 remainder will be hidden on the main blog page, with a link to full post).
 
 For example, see this post:
@@ -48,11 +49,11 @@ For example, see this post:
 ## Adding a new author
 Authors are referenced by authorid.
 
-- Add a section to _data/authors.yml , where the key is authorid.
+- Add a section to <_data/authors.yml> , where the key is authorid.
 Add the 'name' as you want your name to be displayed, and 'gravatar' as your
 [Gravatar](http://en.gravatar.com/) hash.
 
-- Add a new file under authors/, containing whatever you want to be displayed on
+- Add a new file under <./authors/>, containing whatever you want to be displayed on
   your author page (eg, a blurb/bio). For example,
   <https://raw.githubusercontent.com/lwe-blog/lwe-blog.github.io/master/authors/tselil.md>
 

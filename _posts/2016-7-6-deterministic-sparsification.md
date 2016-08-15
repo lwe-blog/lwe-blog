@@ -278,7 +278,7 @@ Kadison-Singer conjecture. One formulation of it is stated below:
 > $$
 > for every $j = 1, \cdots, r$.
 
-This conjecture was positively resolved in \cite{MSS13}, using techniques
+This conjecture was positively resolved in [[MSS13](#MSS13)], using techniques
 arising from generalizing the barrier function argument used to prove
 [Theorem 2](#thm:rank1approx) to a multivariate version.
 

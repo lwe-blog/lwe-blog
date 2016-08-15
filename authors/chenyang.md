@@ -3,4 +3,4 @@ layout: author
 authorid: chenyang
 ---
 
-Hello.
+Chenyang is a first year grad student at MIT advised by Pablo Parrilo.

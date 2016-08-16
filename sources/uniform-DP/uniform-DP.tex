@@ -1,0 +1,558 @@
+\documentclass[]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{fullpage}
+
+\usepackage{graphicx}
+\usepackage{amssymb,amsmath}
+\usepackage{amsthm}
+\usepackage{hyperref}
+
+\renewcommand\qedsymbol{$\blacksquare$}
+\newtheorem{exercise}{Exercise}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{example}{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+% formatting
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+\setlength{\emergencystretch}{3em}
+\IfFileExists{microtype.sty}{\usepackage{microtype}}{}
+
+% compact main title.
+\usepackage{titling}
+\setlength{\droptitle}{-7em}
+%\posttitle{\par\end{center}\vspace{-2em}}
+%\postauthor{\end{tabular}\par\end{center}\vspace{-2.5em}}
+%\postdate{\par\end{center}}
+
+% math macros
+\newcommand{\1}{\mathbb{1}}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\newcommand{\x}{\times}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+%\newcommand{\N}{\mathcal{N}}
+\newcommand{\E}{\mathop{\mathbb{E}}}
+\renewcommand{\bar}{\overline}
+\renewcommand{\epsilon}{\varepsilon}
+\newcommand{\eps}{\epsilon}
+
+\newcommand{\bmqty}[1]{\begin{bmatrix}#1\end{bmatrix}}
+\newcommand{\innp}[1]{\langle #1 \rangle}
+\DeclareMathOperator{\rank}{rank}
+\newcommand{\note}[1]{&&\text{(#1)}} % use this to annotate eqns in align environments.
+
+% special command for including images.
+% \image{width = 100}{web file}{local file}
+% or \image{height = 100}{...}
+\def\image#1#2#3{\begin{center}\includegraphics[#1pt]{#3}\end{center}}
+
+% you can define arbitrary math-mode macros here (or anywhere).
+\DeclareMathOperator*{\poly}{poly}
+
+\usepackage{xcolor}
+\newcommand{\TODO}[1][TODO]{\textcolor{red}{#1}}
+
+\usepackage{mdframed}
+\newcommand{\A}{\mathcal{A}}
+
+\newcommand{\ox}{\otimes}
+
+\title{Constructive Hardness Amplification via Uniform Direct Product}
+\author{Preetum Nakkiran}
+\date{Jul 07, 2016}
+
+\begin{document}
+\maketitle
+
+%I'm currently reading the interesting recent paper
+%``Learning Algorithms from Natural Proofs'', by
+%Carmosino-Impagliazzo-Kabanets-Kolokolova \cite{learning}.
+%We won't discuss it specifically in this post, but they show
+%(roughly) that an efficient \emph{distinguisher}
+%for a circuit class (vs. a random function)
+%can be used to \emph{compress} functions from this class
+%(given the truth table, output a small circuit computing the function).
+
+
+\emph{This post was motivated by trying to understand the recent paper
+``Learning Algorithms from Natural Proofs'', by
+Carmosino-Impagliazzo-Kabanets-Kolokolova \cite{learning}.
+They crucially use the fact that several results in hardness amplification can
+be made constructive.
+%(like Goldreich-Levin, Nisan-Wigderson,
+%and the XOR-lemma / direct product theorem).
+In this post, we will look at the Uniform Direct Product Theorem
+of Impagliazzo-Jaiswal-Kabanets-Wigderson \cite{IJKW}.
+We will state the original theorem and algorithm of \cite{IJKW},
+then we will present a simpler analysis for a
+(weaker) non-uniform version of their algorithm,
+which contains some of the main ideas.
+}
+
+
+For a given function $f: \{0, 1\}^n \to \{0, 1\}^\ell$, say a circuit $C$ ``$\eps$-computes $f$''
+if $C$ computes $f$ correctly on at least $\eps$-fraction of inputs.
+That is, $\Pr_x[C(x) = f(x)] \geq \epsilon$.
+We are interested in the following kind of direct product theorem
+(informally):
+``If function $f$ cannot be $\eps$-computed by any small circuit $C$,
+then the direct-product $f^{\ox k}(x_1, x_2, \dots x_k) := (f(x_1), f(x_2), \dots, f(x_k))$
+cannot be computed better than roughly $\eps^k$ by any similarly small
+circuit.''
+\footnote{
+    If this seems trivial, consider the $k=2$ case.
+    We want to show that if $\Pr_x[C(x) = f(x)]  \leq \epsilon$ for all small
+    circuits $C$, then $\Pr_{x, y}[C'(x, y) = (f(x), f(y))] \lesssim
+\eps^2$ for all similarly small circuits $C'$.
+This is clearly true if the circuit $C'$ operates independently on its inputs,
+but not as clear otherwise (eg, the correctness of $C'$-s two outputs could be
+highly correlated). Indeed, proofs of the direct-product theorem take advantage
+of this correlation.
+}
+
+This is usually proved\footnote{See the last section for good references to prior
+proofs.}
+in contrapositive, by showing: If there exists a circuit
+$C'$ that $\eps^k$-computes $f^{\ox k}$, then there exists a similarly-sized circuit
+$C$ that $\eps$-computes $f$.
+The very interesting part is, this amplification can be made fully constructive,
+by a simple algorithm.
+\begin{theorem}[\cite{IJKW}, and Theorem 4.1 \cite{learning}]
+    \label{thm:uniformDP}
+Let $k \in \N, \eps > 0$.
+There is a (uniform) PPT algorithm $\A$ with the following guarantees:
+\begin{itemize}
+    \item {\bf Input:} A circuit $C'$ that $\eps$-computes $f^{\ox k}$ for some
+        function $f:\{0,1\}^n \to \{0, 1\}^\ell$.
+    \item {\bf Output:} With probability $\Omega(\eps)$, output a circuit $C$
+        that $(1-\delta)$-computes $f$.
+\end{itemize}
+for $\delta = O(\log(1/\eps)/k)$.
+In particular, $(1-\delta) = \eps^{O(1/k)}$.
+The circuit $C$ is of size $|C'|\poly(n, k, \log(1/\delta), 1/\eps)$.
+\end{theorem}
+
+Note that we can only hope to construct the good circuit with probability
+$\Omega(\eps)$, since unique decoding is impossible: the circuit
+$C'$ may $\eps$-compute up to $(1/\eps)$ different functions $f$
+(agreeing with a different function on each $\eps$-fraction of its inputs).
+
+
+\section{Uniform Version}
+
+The algorithm for Theorem~\ref{thm:uniformDP} is:
+\begin{mdframed}
+$\mathcal{A}(C')$:
+
+Input: A circuit $C'$
+that $\eps$-computes the direct-product $f^{\ox k}$.
+\begin{enumerate}
+    \item Pick $k$ iid random inputs
+        $x_i \in \{0, 1\}^n$,
+        let $\vec b = (x_1, \dots, x_k)$,
+        and evaluate $C'(\vec b)$.
+    \item Pick a random subset $A \subset \{x_1, \dots, x_k\}$ of size $k/2$.
+        Record $v := C'(\vec b)|_A$ as the answers of $C'$ on the inputs in $A$.
+    \item Output the circuit $C_{A, v}$
+defined below (with the values $v$ on the subset $A$ hardcoded).
+\end{enumerate}
+\end{mdframed}
+
+$C_{A, v}$ is defined as the randomized circuit:\\
+\begin{mdframed}
+    $C_{A, v}(x)$:
+
+On input $x \in \{0, 1\}^n$, check if $x \in A$, in which case output $v|_x$ (the hardcoded
+    value of $x$ according to $v$).
+    Otherwise, repeat the following $T = O(\log(1/\delta)/\epsilon)$
+    times.
+\begin{enumerate}
+    \item Sample $(k/2 - 1)$ additional iid random strings $\{y_j\}$, each $y_j
+        \in \{0, 1\}^n$, and let
+        $\vec b := (x, A, \{y_j\})$ be the tuple of $k$ strings.
+        %Sample a random $k$-set of strings $B$ s.t. $A \cup \{x\} \subset B$.
+    \item Evaluate $C'(\pi(\vec b))$ for a random permutation $\pi$ of the $k$
+        inputs.
+    \item If the answers of $C'$ restricted to $A$ agree with the hardcoded
+        values $v$, then output $C'(\pi(\vec b))|_x$, (the answer $C'$ gave for
+        $x$), and stop.
+\end{enumerate}
+Output an error if no output is produced after $T$ iterations.
+\end{mdframed}
+
+{\bf Intuition:} Suppose the values $v$ returned when the Algorithm queries $C'(b)$
+are actually correct. That is, $v|_x = f(x)$ for all $x \in A$.
+Then, the circuit $C_{A, v}$ evaluates $C'$ on input $\vec b = (b_1, \dots
+b_k)$, and it knows the correct value of $f(b_i)$ is on half of these
+coordinates.
+So, $C_{A, v}(x)$ tries to estimate whether a random point
+$C'(\vec b)$ is correct or not, based on if it agrees on the known subset of
+coordinates. The idea is that a value of $C'(\vec b)$ that is wrong on
+many coordinates is unlikely to pass this test.
+(See \cite{IJKW} for the full proof).
+
+Now, in the remainder of this note, we will develop and prove a simpler
+(weaker) version.
+
+\section{Symmetrizing}
+The direct-product as defined above has a permutation symmetry:
+$$
+f^{\ox k}(\pi(x_1, \dots x_k))
+=
+\pi(f^{\ox k}(x_1, \dots x_k))
+$$
+for any permutation $\pi$.
+
+The algorithm of Theorem~\ref{thm:uniformDP} strongly takes advantage of this symmetry (indeed,
+the algorithm would not work as promised if we omitted the random
+permutations).\footnote{Consider a $C'(x_1, \dots x_k)$ that is correct if $x_1$ lies in some
+    $\eps$-density set, and random otherwise. Without the random permutations,
+$C_{A, v}(x)$ will always evaluate $C'(x, \dots)$, and produce no output for
+$(1-\epsilon)$-fraction of inputs $x$.}
+To simplify presentation, it helps to define the direct-product
+$f^k$ as a function over $k$-{\bf multisets} of inputs, instead of over
+$k$-tuples of inputs.
+Following~\cite{IJKW}, for the remainder of this note,
+we will work in the setting of $k$-multisets,
+and denote the $k$-multiset direct product as $f^k$.
+That is, $f^k$ takes as input an (unordered) $k$-multiset
+$B = \{x_1, x_2, \dots, x_k\}$, and returns the $k$-tuple
+$$f^k(\{x_1, x_2, \dots, x_k\}) := (f(x_1), f(x_2), \dots, f(x_k))$$
+
+We consider the probability measure induced by the uniform measure over tuples.
+That is, ``pick a random $k$-multiset of $U$''
+means to generate a multiset by picking
+$k$ iid random elements from the universe $U$,
+and forming the (unordered) multiset containing them.\footnote{So for example, for $k=3$ the multiset $\{a, a, a\}$
+has lower probability of being drawn than $\{a, a, b\}$
+for $a \neq b$.}
+
+The notion of $\eps$-computing remains the same:\footnote{For our purposes,
+    having a randomized circuit that
+    $\eps$-computes $f^{\ox k}$ is essentially equivalent to having a
+randomized circuit that $\eps$-computes $f^k$.
+The proofs will extend to randomized circuits, where we say $C$
+$\eps$-computes $f$ if $\Pr_{C, x}[C(x) = f(x)] \geq \eps$, taken over
+randomness of $C$ as well as $x$.}
+A circuit $C'(B)$ $\epsilon$-computes $f^k$
+if
+$$\Pr_{B \sim \text{random $k$-multiset}}[C'(B) = f^k(B)] \geq \epsilon$$
+Note that $C'$ is allowed to give different answers for
+the same element in a multiset, e.g. if $C'(\{a, a, a\}) = (y_1, y_2, y_3)$,
+the $y_i$s may all be distinct -- we don't take advantage of this symmetry.
+
+\section{Oracle Version}
+Here we present and prove a simpler version of the algorithm, in the case when
+we also have access to an oracle for $f$. (This can be seen as a non-uniform
+version).
+\begin{theorem}
+\label{thm:oracle}
+Let $k \in \N, \eps > 0$, and $f:\{0,1\}^n \to \{0, 1\}^\ell$.
+There is a PPT algorithm $\A^f$ with oracle access to $f$, with the following guarantees:
+\begin{itemize}
+    \item {\bf Input:} A circuit $C'$ that $\eps$-computes $f^k$.
+    \item {\bf Output:} With probability $0.99$, output a circuit $C$
+        that $(1-\delta)$-computes $f$.
+\end{itemize}
+for $\delta = O(\log(k)/(\eps k))$.
+The circuit $C$ is of size $|C'|\poly(n, k, \log(1/\delta), 1/\eps)$.
+\end{theorem}
+
+The idea is, in Step 2 of Algorithm $\A$,
+we can generate the correct values $v$ for the inputs
+in set $A$, by querying the oracle.
+That is, we set $v := f(A)$ directly, instead of using our approximate circuit
+$C'$.
+In fact, if we have a perfect oracle for $f$ we can simplify the algorithm even
+further.
+
+
+The algorithm is:
+\begin{mdframed}
+$\mathcal{A}^f(C')$:
+
+\begin{enumerate}
+    \item
+        Pick
+        $T = O(\log(k)/\epsilon)$
+    random $(k-1)$-multisets $A_1, \dots A_T$,
+    each $A_i$ containing $(k-1)$ random inputs from $\{0, 1\}^n$.
+\item Query the $f$-oracle, and record the values of $v_{A_i} := \{f(x): x \in A_i\}$
+    for all sets $A_i$.
+\item Output the circuit $C_{A, v}$
+    defined below (with the values $v_{A_i}$ on the subsets $A_i$ hardcoded).
+\end{enumerate}
+\end{mdframed}
+
+$C_{A, v}$ is defined as the circuit:\\
+\begin{mdframed}
+    $C_{A, v}(x)$:
+
+    For each $i = 1 \dots T = O(\log(k)/\epsilon)$:
+\begin{enumerate}
+    \item Let $B_i := \{x\} \cup A_i$.
+    \item Evaluate $C'(B_i)$.
+    \item If the answers of $C'(B_i)$ restricted to $A_i$ agree with the hardcoded
+        values $v_{A_i} = f(A_i)$, then output $C'(B_i)|_x$, (the answer $C'$ gave for
+        $x$), and stop.
+\end{enumerate}
+Output an error if no output is produced after $T$ iterations.
+\end{mdframed}
+
+\begin{proof}[Proof of Theorem~\ref{thm:oracle}]
+
+
+{\bf Parameters:} We will have
+$\delta = 10000\log(k)/(\epsilon k)$
+and
+$T = 100 \log(k)/ \epsilon$.
+(Think of aiming for $\delta \approx 1/k$).
+
+We will argue that
+\begin{equation}
+    \label{eqn:main}
+    \Pr_{\A, C, x}[C_{A, v}(x) \neq f(x)] \leq \delta / 100
+\end{equation}
+Where the probability is over the randomness of algorithm $\A^f$ (random choice of
+sets $A_i$), and random input $x \in \{0, 1\}^n$.
+Then, by Markov
+$$\Pr_{\A}\left[ \Pr_{C, x}[C_{A, v}(x) \neq f(x)] > \delta \right] \leq 1/100$$
+so the algorithm $\A^f$ will produce a good circuit $C_{A, v}$ except with probability $1/100$.
+%\footnote{We can also fix the randomness used in the circuit $C_{A, v}$ at this point, if
+%we want to output a deterministic circuit.}
+
+In the execution of circuit $C_{A, v}(x)$, let us say
+``iteration $i$ fails'' if Step 3 of the circuit at iteration $i$ outputs a wrong answer.
+That is, iteration $i$ fails if $C'(B_i)$ is correct on the $(k-1)$ values in
+$A_i = B_i \setminus \{x\}$, but wrong on $x$.
+%(ie, $C'(B_i)|_{x} \neq f(x)$).
+
+Consider the probability that iteration 1 fails.
+Notice that the distribution of $(x, A_1, B_1)$ is equivalently generated as:
+
+\begin{tabular}{ccc}
+    $\{(x, A_1, B_1)\}$  & $\equiv$ & $\{(x, A_1, B_1)\}$  \\
+    $A_1 \sim$ random $(k-1)$-multiset & & $B_1 \sim$ random $k$-multiset \\
+     $x \in \{0, 1\}^n$ & & $x \in B_1$\\
+    $B_1 := \{x\} \cup A_1$ & & $A_1 := B_1 \setminus \{x\}$
+\end{tabular}
+
+That is, we can think of first sampling a random $k$-multiset $B_1$,
+then sampling a random $x \in B_1$.
+%Iteration 1 only returns an answer if $C'(B_1)$ is correct on the $(k-1)$ values
+%of $A_1$, thus
+Iteration 1 only returns an output when $C'(B_1)$
+has at most $1$ wrong answer
+(since it checks correctness on the $(k-1)$ values of $A_1$).
+Thus iteration 1 only fails if the random $x \in B_1$ falls on this $1$ (of $k$)
+answers.
+So
+\begin{equation}
+    \Pr_{x, A_1, B_1}[~\text{Iteration 1 fails}~] \leq \frac{1}{k}
+\end{equation}
+
+%Now, this probability must be small. Conditioning on the size of $Err(B_1)$, there are two cases:
+%\begin{enumerate}
+    %\item $|Err(B_1)|/k < O(\delta / T)$:
+        %Then $x \in Err(B_1)$ happens with probability at most $O(\delta/T)$.
+    %\item $|Err(B_1)| / k \geq O(\delta / T)$:
+    %Then, the set $A_1$ (a random $(k/2)$-subset of $B_1$)
+    %is very unlikely to miss all the elements of $Err(B_1)$.
+
+    %$\Pr_{A_1}[A_1 \cap Err(B_1) = \varnothing] =
+    %(1-|Err(B_1)|/k)^{k/2}
+    %\leq (1- O(\log(1/\epsilon) / kT))^{k/2}
+    %\leq
+%\end{enumerate}
+
+Now, we just union bound:
+\begin{align*}
+    \Pr[\text{error}] &= \Pr_{\A, C, x}[C_{A, v}(x) \neq f(x)]\\
+    &\leq
+    \Pr[\text{no output produced after $T$ iterations, or some iteration fails}]\\
+    &\leq
+    \Pr[\text{no output produced}] + T \cdot \Pr[\text{Iteration 1 fails}]\\
+    &\leq
+    \Pr[\text{no output produced}] + \frac{T}{k}
+\end{align*}
+
+For our choice of $T, \delta$, the second term is $\frac{T}{k} \leq \delta /
+200$. We will show the first term is $\leq \delta / 200$ as well, completing the
+proof.
+
+{\bf Produces output w.h.p.}
+
+It remains to show that the circuit $C_{A, v}$ produces an output with high
+probability.
+In Step 3 of the circuit $C_{A, v}$, notice that if $C'$ is queried
+on a correct input $B_i$, it will pass the test and output a value.
+
+The idea is: since $C'$ is correct on $\epsilon$-fraction of inputs,
+if we try $T = \Omega(\log(1/\delta)/\epsilon)$ iid random inputs,
+we will be sure to hit a correct input, except with probability $O(\delta)$.
+This doesn't quite work, since the inputs $B_i$ are not iid random (they all
+contain the input $x$) -- but this dependence is minimal, so it still works
+out.
+
+Following~\cite{IJKW}, it helps to think in term of this bipartite graph.
+Define $G$ as a biregular bipartite graph between inputs $x \in \{0, 1\}^n$,
+and $k$-{\bf tuples}\footnote{Going back to tuples just to simplify
+the notation, so we can deal with the uniform measure.}
+$B \in (\{0, 1\}^n)^k$, with an edge
+$(x, B)$ if $x \in B$.
+We can think of the circuit $C_{A, v}(x)$ as picking up to $T$ random neighbors of $x$ in the graph
+$G$, until hitting an input $B$ where $C'(B)$ is correct on all $B \setminus \{x\}$.
+We know that $\epsilon$-fraction of $k$-tuples $B$ are correct, and in fact we will
+show that almost all inputs $x$ have close to $\eps$-fraction of their neighbors
+as correct.
+
+\image{width=200}{./graph_color.png}{graph_color.png}
+
+\newcommand{\bad}{\text{BAD}}
+\newcommand{\good}{\text{GOOD}}
+
+\begin{lemma}
+    \label{lem:notbad}
+    There are at most $O(\delta)$-fraction of ``$\bad$'' inputs $x \in \{0, 1\}^n$
+    for which
+    $$\Pr_{B \in N(x)}[C'(B) \text{ is correct}] \leq \epsilon/10$$
+\end{lemma}
+This is sufficient to show that $\Pr[\text{no output produced}] \leq O(\delta)$,
+since for inputs $x$ that are not $\bad$, sampling
+$T = \Omega(\log(k)/\eps)$ iid neighbors of $x$ will hit a correct neighbor,
+except with probability $O(1/k) \leq O(\delta)$.
+\footnote{
+$(1-\eps/10)^{T} \leq e^{-T\eps / 10} \leq 1/k \leq \delta$.
+}
+
+It is easier to show the related property:
+\begin{lemma}[Mixing Lemma]
+    \label{lem:mixing}
+    Let $H \subseteq \{0, 1\}^n$ be a set of inputs on the left of $G$,
+    with the density of $H$ at
+    least $\mu$.
+    Then, except for some $2e^{-\Omega(\mu k)}$-fraction of tuples $B$,
+    all tuples $B$ on the right of $G$ have
+    $$\Pr_{x \in N(B)}[x \in H] = \mu \pm \mu/2$$
+\end{lemma}
+\begin{proof}[Proof of Lemma~\ref{lem:mixing}]
+    Drawing a uniformly random tuple $B$ on the right is
+    exactly drawing $k$ iid samples of inputs
+    $B := (x_1, x_2, \dots, x_k)$.
+    Then, by definition of $G$, picking a random neighbor $x \in N(B)$
+    is just picking a random $x \in B$.
+    Thus, it is sufficient to show that
+    if we draw $k$ iid inputs $x_1, x_2, \dots, x_k$,
+    the fraction of inputs that fall in $H$
+    is within a multiplicative factor $(1 \pm 1/2)$ of its expectation $\mu$
+    (with high probability).
+    This follows immediately from Chernoff bounds.
+    %$(x_1, x_2, \dots, x_k)$.
+    %Imagine each input labeled $0/1$, by the indicator of $x \in H$.
+\end{proof}
+
+From this, the above Lemma~\ref{lem:notbad} follows easily:
+
+\begin{proof}[Proof of Lemma~\ref{lem:notbad}]
+Let $\bad$ be the set of ``bad'' inputs $x$, where
+$\Pr_{B \in N(x)}[C'(B) \text{ is correct}] \leq \epsilon/10$.
+Suppose the density of $\bad$ is $\mu$.
+Let us count fraction of total edges in $G$ that go between
+$\bad$, and the set of correct tuples (which we call $\good$).
+By the mixing lemma, there are at least
+$(\epsilon - 2e^{\Omega(\mu k)})$
+fraction of tuples $B^*$ with
+$\Pr_{x \in N(B^*)}[\text{$x$ is bad}] \geq \mu / 2$.
+So there are at least
+$(\epsilon - 2e^{\Omega(\mu k)}) (\mu/2)$
+fraction of edges between the $\bad$ and $\good$ sets.
+
+But, each bad input $x$ has at most $\eps/10$ fraction of edges into $\good$ by
+definition, so the fraction of $\bad \leftrightarrow \good$ edges is at most
+$\mu (\eps/10)$.
+
+Thus we must have
+\begin{align*}
+    (\epsilon - 2e^{-\Omega(\mu k)}) (\mu/2)
+    &\leq
+\mu (\eps/10)\\
+\implies
+\mu &\leq O(\log(1/\eps)/k)
+\end{align*}
+This gives $\mu \leq \delta/200$ for our choice of $\delta$.
+\end{proof}
+
+This concludes the proof of correctness of the oracle version
+(Theorem~\ref{thm:oracle}).
+\end{proof}
+
+\section{Closing Remarks}
+
+\begin{itemize}
+    \item Note that in the oracle version, we were able to output a good circuit
+        with probability $0.99$, instead of w.p. $\Theta(\eps)$ as in the fully
+        uniform version.
+        This makes sense because if we have an $f$-oracle, we can ``check'' if
+        our circuit is actually computing the desired $f$, so we don't run into
+        the unique decoding problem.
+        (Indeed, we can construct an optimal version of algorithm $\A^f$ of
+        Theorem~\ref{thm:oracle} from the algorithm $\A$ of
+        Theorem~\ref{thm:uniformDP} in a black-box way,
+        by checking if the output circuit of $\A$ mostly agrees
+        with $f$ on enough random inputs).
+
+    \item There were several simplifications we made from $\A$ to $\A^f$.\\
+        (1) We queried the oracle for the hardcoded values $v$, instead of the
+        circuit.\\
+        (2) We hardcoded $(k-1)$-multisets instead of $(k/2)$-multisets.\\
+        (3) We hardcoded $T$ iid multisets $\{A_i\}$, instead of just one
+        multiset $A$.\\
+        Note that we could not have done (2) without also doing (3) -- otherwise
+        there would not have been enough mixing (the circuit would fail with
+        probability close to $\eps$).
+        Also, (3) would not have worked in the fully uniform case ($\A$, without the
+        oracle) -- because then all the hardcoded sets will be correct with only very
+        small probability.
+
+    \item The reason Theorem~\ref{thm:oracle} has suboptimal parameters (eg, compare
+        the setting of $\delta$ to Theorem~\ref{thm:uniformDP}) is because our
+        analysis used the loose union bound, instead of using the fact that
+        circuit $C_{A, v}$, by only outputting values that pass a test, is doing
+        rejection-sampling on a certain conditional probability space.
+        The tight analysis in \cite{IJKW} takes advantage of this fact.
+
+    \item In the proof of Thereom~\ref{thm:oracle}, we used a property of the
+        graph $G$ that was essentially like an ``Expander Mixing Lemma''.
+        We may hope that if we replace $G$ with something sufficiently
+        expander-like, we could get a derandomized direct-product theorem.
+        Indeed, something like this is done in \cite{IJKW}
+        (``Uniform direct product theorems: simplified, optimized, and
+        {\it derandomized}'').
+
+    \item I think the oracle version is sufficient for the applications in
+        \cite{learning}, since there we have query access to the function $f$ we
+        are trying to learn/compress.
+
+    \item For a good survey on direct-product for non-uniform hardness amplification,
+and the related ``Yao's XOR Lemma'', see \cite{yao} (which includes at least 3
+different proofs of the non-uniform XOR lemma). For a clean proof of
+Impagliazzo's Hardore Set theorem, which is used in some proofs of the XOR
+lemma, see for example Arora-Barak.
+
+\end{itemize}
+
+
+\bibliography{bib}{}
+\bibliographystyle{alphaurl}
+
+\end{document}

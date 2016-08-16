@@ -1,0 +1,27 @@
+\begin{thebibliography}{IJKW10}
+
+\bibitem[CIKK16]{learning}
+Marco~L Carmosino, Russell Impagliazzo, Valentine Kabanets, and Antonina
+  Kolokolova.
+\newblock Learning algorithms from natural proofs.
+\newblock In {\em LIPIcs-Leibniz International Proceedings in Informatics},
+  volume~50. Schloss Dagstuhl-Leibniz-Zentrum fuer Informatik, 2016.
+\newblock URL:
+  \url{http://drops.dagstuhl.de/opus/volltexte/2016/5855/pdf/34.pdf}.
+
+\bibitem[GNW11]{yao}
+Oded Goldreich, Noam Nisan, and Avi Wigderson.
+\newblock On yao's xor-lemma.
+\newblock In {\em Studies in Complexity and Cryptography. Miscellanea on the
+  Interplay between Randomness and Computation}, pages 273--301. Springer,
+  2011.
+\newblock URL: \url{http://www.wisdom.weizmann.ac.il/~oded/COL/yao.pdf}.
+
+\bibitem[IJKW10]{IJKW}
+Russell Impagliazzo, Ragesh Jaiswal, Valentine Kabanets, and Avi Wigderson.
+\newblock Uniform direct product theorems: simplified, optimized, and
+  derandomized.
+\newblock {\em SIAM Journal on Computing}, 39(4):1637--1665, 2010.
+\newblock URL: \url{http://www.cs.columbia.edu/~rjaiswal/IJKW-Full.pdf}.
+
+\end{thebibliography}

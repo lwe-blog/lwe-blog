@@ -14,8 +14,9 @@ layout: base
         <address>
             By {% include gen_author_link.html %}
         </address> &mdash;
-        <time pubdate datetime="{{ post.date | date: "%Y-%d-%B" }}" title="{{ post.date | date: "%b %d, %Y" }}">{{ post.date | date: "%b %d, %Y" }}</time> &mdash;
-        {% include read_time_estimate.html content=post.content %}
+        <time pubdate datetime="{{ post.date | date: "%Y-%d-%B" }}" title="{{ post.date | date: "%b %d, %Y" }}">{{ post.date | date: "%b %d, %Y" }}</time>
+        <!--&mdash; {% include read_time_estimate.html content=post.content %}-->
+        {% if post.pdf %}&mdash; post as <a href={{ post.pdf }}>[PDF]</a>{% endif %}
       </div>
       <p>
       {{ post.excerpt }}

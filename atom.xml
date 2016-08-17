@@ -8,17 +8,16 @@
  <link href="{{ site.url }}"/>
  <updated>{{ site.time | date_to_xmlschema }}</updated>
  <id>{{ site.url }}/atom.xml</id>
- <author>
-   <name>theory students</name>
-   <uri>{{ site.url }}</uri>
- </author>
 
  {% for post in site.posts limit:10 %}
+ {% assign author = site.data.authors[post.authorid] %}
  <entry>
    <title>{{ post.title }}</title>
+   <author>
+    <name>{{ author.name }}</name>
+   </author>
    <link href="{{ site.url }}{{ post.url }}"/>
    <published>{{ post.date | date_to_xmlschema }}</published>
-   <updated>{% if post.last-modified %}{{post.last-modified}}{% else %}{{ post.date | date_to_xmlschema }}{% endif %}</updated>
    <id>{{ site.url }}{{ post.id }}</id>
    <content type="html">{{ post.content | xml_escape }}</content>
  </entry>

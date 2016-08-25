@@ -72,8 +72,8 @@ Input: A circuit $C'$ that $\eps$-computes the direct-product $f^{\ox k}$.
 </ol>
 
  </div>
-<p>
-$C_{A, v}$ is defined as the randomized circuit:<br/>
+ <p><p>
+$C_{A, v}$ is defined as the randomized circuit:
  <div class='framed'> $C_{A, v}(x)$:
 <p>
 On input $x \in \{0, 1\}^n$, check if $x \in A$, in which case output $v|_x$ (the hardcoded value of $x$ according to $v$). Otherwise, repeat the following $T = O(\log(1/\delta)/\epsilon)$ times.
@@ -82,7 +82,7 @@ On input $x \in \{0, 1\}^n$, check if $x \in A$, in which case output $v|_x$ (th
 </ol>
 
  Output an error if no output is produced after $T$ iterations. </div>
-<p>
+<p><p>
 <b>Intuition:</b> Suppose the values $v$ returned when the Algorithm queries $C'(b)$ are actually correct. That is, $v|_x = f(x)$ for all $x \in A$. Then, the circuit $C_{A, v}$ evaluates $C'$ on input $\vec b = (b_1, \dots b_k)$, and it knows the correct value of $f(b_i)$ is on half of these coordinates. So, $C_{A, v}(x)$ tries to estimate whether a random point $C'(\vec b)$ is correct or not, based on if it agrees on the known subset of coordinates. The idea is that a value of $C'(\vec b)$ that is wrong on many coordinates is unlikely to pass this test. (See [<a href='#ref-IJKW10'>IJKW10</a>] for the full proof).
 <p>
 Now, in the remainder of this note, we will develop and prove a simpler (weaker) version.
@@ -117,7 +117,7 @@ The algorithm is: <div class='framed'> $\mathcal{A}^f(C')$:
 </ol>
 
  </div>
-<p>
+ <p><p>
 $C_{A, v}$ is defined as the circuit:<br/>
  <div class='framed'> $C_{A, v}(x)$:
 <p>
@@ -127,7 +127,7 @@ $C_{A, v}$ is defined as the circuit:<br/>
 </ol>
 
  Output an error if no output is produced after $T$ iterations. </div>
-<p>
+<p><p>
 <em>Proof of Theorem <a href="#thmoracle">2</a>:</em>
 <p>
 <b>Parameters:</b> We will have $\delta = 10000\log(k)/(\epsilon k)$ and $T = 100 \log(k)/ \epsilon$. (Think of aiming for $\delta \approx 1/k$).

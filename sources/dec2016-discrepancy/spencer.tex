@@ -70,7 +70,7 @@ A priori, it might not be clear what $\disc(\cS)$ should be.
 Some set systems have discrepancy zero---consider for example a ``planted'' set system, in which the rows of the incidence matrix $A$ are chosen to be orthogonal to some coloring $x\in \{\pm 1\}^n$.
 On the other hand, naively we could have set systems with discrepancy as large as $n$.
 
-\subsubsection*{Uniformly Random Coloring}
+\subsection*{Uniformly Random Coloring}
 It is not very hard to see that $n$ is an egregious upper bound (when $m = |\cS|$ is not too large).
 Let's consider $x \in \{\pm\}^n$ chosen uniformly at random.
 For each $S_j \in \cS$, by Hoeffding's inequality, we have that
@@ -88,7 +88,7 @@ So for any set system $\cS$, the random coloring gives the improved bound,
     \disc(\cS) \le O(\sqrt{n\log m}).\label{randomub}
 \end{equation}
 
-\subsubsection*{A Lower Bound}
+\subsection*{A Lower Bound}
 We'll see that the upper bound we got from the random coloring is almost tight.
 Our lower bound will come from the set system defined by the
 %<a href="https://en.wikipedia.org/wiki/Hadamard_matrix">
@@ -145,8 +145,8 @@ Also, Spencer's proof is extremely elegant (though nonconstructive).
 We'll prove it below, but we'll assume that $m = n$, and we'll be sloppy with constants (so we'll get an upper bound of $O(\sqrt{n})$ instead of $6\sqrt{n}$).
 
 \paragraph{The gist.}
-The proof is by induction---given $\cS$ and $[n]$, Spencer shows that there exists some \emph{partial coloring} $y \in \{-1,0,1\}^n$ with at least a constant fraction of the elements colored in and low discrepancy, so that $\|y\|_1 = \Omega(n)$ and $\|Ay\|_{\infty} \le O(\sqrt{n})$.
-Then this fact is applied inductively for $\log n$ steps, until all of the items are colored, and the total discrepancy is $\sum_{t=0}^{\log n} O(1)^t\cdot \sqrt{n} = O(\sqrt{n})$.
+The proof is by induction---given $\cS$ and $[n]$, Spencer shows that there exists some \emph{partial coloring} $y \in \{-1,0,1\}^n$ with at least a constant fraction of the elements colored in and low discrepancy, so that $\|y\|_1 \ge c\cdot n$ and $\|Ay\|_{\infty} \le C\sqrt{n}$ for constants $c,C$.
+Then this fact is applied inductively for $\log n$ steps, until all of the items are colored, and the total discrepancy is $\sum_{t=0}^{\log n} C\cdot \sqrt{c^t\cdot n} = O(\sqrt{n})$, since $c < 1$.
 
 The reason such a partial coloring $y$ must exist is because the map $Ax$ is not spread out enough---by the pigeonhole principle, one can show that there are at least $2^{\Omega(n)}$ distinct points $x \in \{\pm 1\}^n$ that get mapped to a ball of radius $O(\sqrt{n})$.
 Since there are so many points, there must exist $x_1,x_2$ in this ball that have large Hamming distance, so that their difference has many nonzero entries, and so the partial coloring is given by $y = \frac{1}{2}(x_1-x_2)$.
@@ -158,7 +158,7 @@ We will prove the following lemma, which we will then apply inductively:
 Let $m,n \in \N$ with $n \le m$, and let $A$ be an $m \times n$ matrix with $0/1$ entries.
     Then there exist universal constants $c_1,c_2$ such that there always exists a vector $y \in \{-1,0,1\}^n$ so that $\|y\|_1 \ge c_1 \cdot n$ and
 \[
-    \|Ax\|_{\infty} \le c_2\cdot \sqrt{n\log\frac{m}{n}}.
+    \|Ay\|_{\infty} \le c_2\cdot \sqrt{n\log\frac{m}{n}}.
 \]
 \end{lemma}
 
@@ -166,10 +166,14 @@ Let $m,n \in \N$ with $n \le m$, and let $A$ be an $m \times n$ matrix with $0/1
     Let $\cB_{\infty}(r,p)$ denote the ball of radius $r$ around $p$, where distance is measured in $\ell_\infty$.
     We'll show that there must exist some point $q \in \R^m$ such that
     \[
-	\Pr[ Ax \in \cB_{\infty}(r,q)] \ge 2^{-cn},
+	\Pr_{x\sim\{\pm 1\}^n}[ Ax \in \cB_{\infty}(r,q)] \ge 2^{-cn},
     \]
 for some constant $c$.
     Our strategy will be to use the pigeonhole principle.
+    We'll identify a set $B \subset \R^m$ with $|B| \le 2^{\epsilon n}$, so that for uniformly chosen $x \in \{\pm 1\}^n$, there exists a point in $B$ close to $Ax$ with probability at least $\frac{1}{2}$; because $|B| < 2^{\epsilon n}$, there must be some $q \in B$ which is near at least $2^{(1-\epsilon)n}$.
+    To find such a $B$, which contains few points but is close to $Ax$ with constant probability over uniform $x \in \{\pm 1\}^n$, we'll choose $B$ to be a discretization of the set of points in $\R^m$ that do not have too many entries of large magnitude.
+    The way that we define ``large magnitude'' will partially depend on the standard deviation of entries of $Ax$, and partly on wanting to keep $B$ relatively small.
+
     Define the function $f:\{\pm 1\}^n \to \Z^m$ so that
     \[
 	f(x) = \left\lceil \frac{1}{\sqrt {2n\log \frac{m}{n}}} Ax\right\rceil.
@@ -179,13 +183,13 @@ In words, $f$ maps $x$ to the integral point closest to $Ax/\sqrt{n\log \frac{m}
 We next identify some small subset $B \subset \Z^m$ which contains a large fraction of the range of $f$, which will imply that there must exist some $q \in \sqrt{n\log\frac{m}{n}}\cdot B$ which is close to $Ax$ for many $x \in \{\pm 1\}^n$.
     Define $B \subset \Z^m$ to be the set for which at most a $\kappa_t = 2^{t+2} (m/n)^{-t^2}$-fraction of coordinates are larger than $t$,
     \[
-	B = \left\{(b_1,\ldots,b_m) \in \Z^n ~|~ |\{b_i ~s.t.~ |b_i| \ge t\}| \le \kappa_t \cdot m\right\}.
+	B = \left\{(b_1,\ldots,b_m) \in \Z^m ~|~ |\{b_i ~s.t.~ |b_i| \ge t\}| \le \kappa_t \cdot m\right\}.
     \]
     For uniformly chosen $x$, by Hoeffding's inequality,
     \[
 	\Pr\left[ |\iprod{x,a_j}| \ge t \sqrt{2n\log\frac{m}{n}} \right]\le 2\left(m/n\right)^{-t^2}
     \]
-    And so the expected number of $j \in [m]$ for which $|\iprod{x,a_j}| \ge t\sqrt{n}$ is at most
+And so the expected number of $j \in [m]$ for which $|\iprod{x,a_j}| \ge t\sqrt{n\log\frac{m}{n}}$ is at most
     \[
 	\E\left[\sum_{j\in[m]} \Ind\left(\left|\iprod{x,a_j}\right| \ge t\sqrt{2n\log\frac{m}{n}}\right) \right] \le m \cdot 2\left(\frac{m}{n}\right)^{-t^2},
     \]
@@ -195,10 +199,10 @@ We next identify some small subset $B \subset \Z^m$ which contains a large fract
 	&\le \frac{1}{2^{t+1}}.\label{eq:cond}
     \end{align}
     Recall that $\kappa_t = 2^{t+1} \left(\frac{m}{n}\right)^{-t^2}$.
-    Thus, for any $x$, the probability that $f(x) = \lceil n^{-1/2} \cdot Ax\rceil \not\in B$ is the sum over (\ref{eq:cond}) for all $t \le \sqrt{n}$, and so by a union bound,
+    Thus, for any $x$, the probability that $f(x) = \lceil (n\log\frac{m}{n})^{-1/2} \cdot Ax\rceil \not\in B$ is the sum over (\ref{eq:cond}) for all $t \le \sqrt{n}$, and so by a union bound,
     \begin{align*}
 	\Pr[f(x) \not \in B]
-	~=~ \Pr\left[\exists t ~s.t.~ \sum_{j \in [m]} \Ind\left(|\iprod{x,a_j}| \ge t\sqrt{n}\right) \ge \kappa_t \cdot m\right]
+	~=~ \Pr\left[\exists t ~s.t.~ \sum_{j \in [m]} \Ind\left(|\iprod{x,a_j}| \ge t\sqrt{n\log\frac{m}{n}}\right) \ge \kappa_t \cdot m\right]
 	~\le~ \sum_{t=1}^{\sqrt{n}} \frac{1}{2^{t+1}}
 	~\le~ \frac{1}{2}.
     \end{align*}
@@ -222,14 +226,14 @@ for some constant $c < 1$.
 
 \medskip
 
-    Since $|B| \le 2^{cn}$ but $f(x) \in B$ for at least $2^{n-1}$ points, it follows that there must exist some $q \in \sqrt{2n\log\frac{m}{n}}\cdot B$ such that $f$ maps at least $2^{n(1-c) -1}$ of the $x \in \{\pm 1\}^n$ to $q$.
+    Since $|B| \le 2^{cn}$ but $f(x) \in B$ for at least $2^{n-1}$ points, it follows that there must exist some $q \in B$ such that $f$ maps at least $2^{n(1-c) -1}$ of the $x \in \{\pm 1\}^n$ to $q$.
     If $f(x) = p/\sqrt{2n\log \frac{m}{n}}$, then by definition $x \in \cB(\sqrt{2n\log \frac{m}{n}}, p)$.
     So we have that
     \[
-	\Pr\left[Ax \in \cB_{\infty}\left(\sqrt{2n\log\frac{m}{n}}, q\right)\right] \ge 2^{-cn}.
+	\Pr\left[Ax \in \cB_{\infty}\left(\sqrt{2n\log\frac{m}{n}}, \sqrt{2n\log\frac{m}{n}}\cdot q\right)\right] \ge 2^{-cn}.
     \]
 
-The proof is now complete if we observe that any subset $C \subset \{\pm 1\}^n$ with  $|C| \ge 2^{cn}$ must have two points at hamming distance at least $n$.
+The proof is now complete if we observe that any subset $C \subset \{\pm 1\}^n$ with  $|C| \ge 2^{cn}$ must have two points at hamming distance at least $\Omega(n)$.
 This is by a theorem of Kleitman, but it is not hard to see.
 The idea is that, if we choose a single point $p \in C$, the number of points around it of Hamming distance at most $2\epsilon n$ is
 \[
@@ -246,12 +250,12 @@ Now, we are ready to prove Spencer's Theorem.
 
 \begin{proof}
 We will apply our lemma recursively, coloring in a $c_1$-fraction of the remaining items at a time.
-After each partial coloring, we update $A$ by removing columns corresponding to colored items, so that at the $t$th step, there are at most $c_1^t$ columns in $A$.
-    There can be at most $\log n - \log c_1$ rounds of partial coloring, and at the $t$th round we can incur a discrepancy of at most $c_2\sqrt{c_1^t n \log\frac{m}{c_1^t n}}$ in each set.
+After each partial coloring, we update $A$ by removing columns corresponding to colored items, so that at the $t$th step, there are at most $c_1^t\cdot n$ columns in $A$.
+    There can be at most $\log n/\log c_1$ rounds of partial coloring, and at the $t$th round we can incur a discrepancy of at most $c_2\sqrt{c_1^t n \log\frac{m}{c_1^t n}}$ in each set.
     Thus the total discrepancy is at most
     \begin{align*}
 	\disc(\cS)
-	&\le \sum_{t=0}^{O(\log n)}\sqrt{c_1^t n \log\frac{m}{c_1^t n}}\\
+	&\le \sum_{t=0}^{O(\log n)}c_2\sqrt{c_1^t n \log\frac{m}{c_1^t n}}\\
 	&\le c_2\sqrt{n}\cdot \sum_{t=0}^{\infty}c_1^t\left(\log\frac{m}{n} + t\log \frac{1}{c_1} \right)^{1/2}
 	\intertext{And since $(x+y)^{1/2} \le x^{1/2} + y^{1/2}$ for $x,y \ge 0$,}
 	&\le O\left(\sqrt{n\log\frac{m}{n}}\right)\cdot \sum_{t=0}^{\infty}c_1^{t/2}
@@ -261,7 +265,7 @@ After each partial coloring, we update $A$ by removing columns corresponding to 
     and the conclusion follows.
 \end{proof}
 
-\section*{Other resources}
+\section*{More sources}
 There are many very good expositions of discrepancy results.
 Two of the resources that I relied on for this post are:
 \begin{itemize}
@@ -272,6 +276,8 @@ Two of the resources that I relied on for this post are:
 	%Full text available here at the time of writing. <a href="http://www.win.tue.nl/~nikhil/pubs/author%20-nikhil-2.pdf ">
 \end{itemize}
 These references contain pointers to other good resources, especially books, which give a more detailed account of the mathematical/historical context of discrepancy minimization.
+
+Also, see the proof in Alon and Spencer's ``The Probabilistic Method'' which is based on entropy and is really clean.
 
 \end{document}
 
